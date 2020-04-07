@@ -1,5 +1,13 @@
 # Two-Phase Commit Protocol (TPCP)
 
+## Innholdsfortegnelse
+
+1. [Installasjonsinstruksjoner](##Installasjonsinstruksjoner)
+2. [Innledning/Introduksjon](##Innledning/Introduksjon)
+3. [Beskrivelse](##Beskrivelse)
+4. [Diskusjon](##Diskusjon)
+5. [Gruppemedlemmer](##Gruppemedlemmer)
+
 ## Installasjonsinstruksjoner
 
 ```
