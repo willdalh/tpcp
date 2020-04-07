@@ -8,7 +8,11 @@ public class ClientHandler extends Thread{
     private Socket connection = null;
     private int id;
 
-    //Takes in a socket connection and a client id as argument.
+    /**
+     * Takes in a socket connection and a client id as argument
+     * @param connection of type socket
+     * @param id client id
+     */
     public ClientHandler(Socket connection, int id){
         this.connection = connection;
         this.id = id;
