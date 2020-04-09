@@ -3,6 +3,7 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * This class handles connection requests from clients and creates
@@ -21,17 +22,41 @@ public class Server {
         final int PORTNR = 3000;
         int id = 0;
 
-        ServerSocket tjener = new ServerSocket(PORTNR);
+        ServerSocket server = new ServerSocket(PORTNR);
         List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<ClientHandler>());
         System.out.println("Server is running. Waiting for clients...");
+        boolean wait = true;
+        while(wait){
 
-        while(true){
-            Socket connection = tjener.accept();
-            Thread clientHandler = new ClientHandler(connection, id);
-            clients.add(clientHandler);
-            clientHandler.start();
-            System.out.println("client connected.\nClient id: " + id + "\nNumber of clients: " + clients.size() + "\n");
+            ExecutorService executor = Executors.newCachedThreadPool();
+            Callable<Object> waiter = new Callable<Object>() {
+                public Object call() throws IOException {
+                    return server.accept();
+            }
+            };
+            Future<Object> promise = executor.submit(waiter);
+            try {
+                Object res = promise.get(5, TimeUnit.SECONDS);
+                clients.add(new ClientHandler((Socket)res, id));
+                clients.get(clients.size() - 1).start();
+                System.out.println("client connected.\nClient id: " + id + "\nNumber of clients: " + clients.size() + "\n");
+            } catch (TimeoutException toe) {
+                System.out.println("Stoped waiting for clients");
+                wait = false;
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+                wait = false;
+            } catch (ExecutionException ee) {
+                ee.printStackTrace();
+                wait = false;
+            } finally {
+                promise.cancel(true);
+            }
             id++;
         }
+        System.out.println("Donn Morison");
+        Coordinator coordinator = new Coordinator();
+        server.close();
+
     }
 }
