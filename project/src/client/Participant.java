@@ -76,7 +76,7 @@ public class Participant {
                 /* Check if coordinator is initiating transaction */
                 if (this.coordinatorInitiatingTransaction(response)) {
                     String[] responseSplit = response.split("--");
-                    Utils.printStringArray(responseSplit);
+                    System.out.println("COORDINATOR: " + response);
 
                     String query = responseSplit[1];
                     this.appendToRedoLog(query);
@@ -86,13 +86,19 @@ public class Participant {
                     while (!participantResponse.matches("YES|NO")) {
                         participantResponse = scanner.nextLine();
                     }
-                    System.out.println(participantResponse);
                     this.handleParticipantResponse(participantResponse);
                 }
 
                 /* Participant requests a transaction */
                 if (scannerInput.length() > 0){
-                    this.requestNewTransaction(scannerInput);
+                    if (scannerInput.equals("!showlog")){
+                        System.out.println("-------------LOG-------------");
+                        System.out.println(this.log);
+                        System.out.println("-----------------------------");
+                    }
+                    else {
+                        this.requestNewTransaction(scannerInput);
+                    }
                 }
             }
 
@@ -122,13 +128,11 @@ public class Participant {
         String response;
         this.sendToCoordinator(participantResponse);
 
-        response = this.readFromCoordinator();
         /* Waits for instructions */
         String instructions = "";
-        while (response == null && response.equals("")) {
-            response = this.readFromCoordinator();
-            instructions = this.coordinatorGivingInstructions(response);
-        }
+        response = this.readFromCoordinatorWithBlocking();
+        System.out.println("COORDINATOR: " + response);
+        instructions = this.coordinatorGivingInstructions(response);
 
         this.executeInstructions(instructions);
     }
@@ -141,10 +145,12 @@ public class Participant {
         if (instructions.equals("COMMIT")){
             this.confirmRedoLog();
             this.sendToCoordinator("COMMITTED");
+            System.out.println("Committed");
         }
         else if (instructions.equals("ROLLBACK")){
             this.confirmUndoLog();
             this.sendToCoordinator("ROLLBACKED");
+            System.out.println("Rollbacked");
         }
     }
 
