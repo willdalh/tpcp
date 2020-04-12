@@ -54,7 +54,7 @@ public class Participant {
             reader = new BufferedReader(isr);
             writer = new PrintWriter(socket.getOutputStream(), true);
 
-            String response = this.readFromCoordinator();
+            String response = this.readFromCoordinatorWithBlocking();
             System.out.println("COORDINATOR: " + response);
 
             Scanner scanner = new Scanner(System.in);
@@ -89,7 +89,6 @@ public class Participant {
 
                 /* Participant requests a transaction */
                 if (scannerInput.length() > 0){
-                    System.out.println("Hei");
                     this.requestNewTransaction(scannerInput);
                 }
             }
@@ -107,7 +106,6 @@ public class Participant {
      * @param query query-request from participant
      */
     private void requestNewTransaction(String query){
-        System.out.println("Hei");
         this.sendToCoordinator("REQUESTING NEW TRANSACTION--" + query);
     }
 
@@ -198,9 +196,27 @@ public class Participant {
     }
 
     /**
+     * Reads from coordinator with blocking
+     *
+     * @return response from coordinator
+     */
+    private String readFromCoordinatorWithBlocking(){
+        String response = "";
+        try {
+            response = this.reader.readLine();
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+        finally {
+            return response;
+        }
+    }
+
+    /**
      * Method for reading messages from coordinator
      *
-     * @return message from coordinator
+     * @return response from coordinator
      */
     private String readFromCoordinator(){
         String response = "";
