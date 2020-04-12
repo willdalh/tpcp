@@ -36,8 +36,6 @@ public class ClientHandler{
             InputStreamReader readConnection = new InputStreamReader(connection.getInputStream());
             writer = new PrintWriter(connection.getOutputStream(), true);
 
-            writer.println("Connection to the participant is established");
-
             writer.println(message);
             System.out.println("Message is deliverd");
 
