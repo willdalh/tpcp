@@ -22,6 +22,9 @@ public class ClientHandler{
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
 
     /**
      * Receves a message from cordinator and sends it to the participant
