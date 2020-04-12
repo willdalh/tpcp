@@ -45,14 +45,14 @@ public class Coordinator {
                     System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
                 }else if(party.readFromParticipant().equals("NO")){
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
-                    messageAll("TRANSACTION--" + this.tractionStatement + "--ABORT");
+                    messageAll("TRANSACTION--" + this.tractionStatement + "--Rollback");
                     return false;
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
             if(timer >= 20){
                 System.out.println("Transaction aborted due to timeout\n");
-                messageAll("TRANSACTION--" + this.tractionStatement + "--ABORT");
+                messageAll("TRANSACTION--" + this.tractionStatement + "--Rollback");
                 return false;
             }
         }
@@ -121,6 +121,7 @@ public class Coordinator {
                     query = party.readFromParticipant();
                     if(!query.equals("")){
                         System.out.println("Got request\n");
+                        query = query.split("--")[1];
                         waiting = false;
                     }
                 }
