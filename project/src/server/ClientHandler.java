@@ -48,7 +48,6 @@ public class ClientHandler{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Connection closed");
     }
 
     /**

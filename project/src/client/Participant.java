@@ -89,6 +89,7 @@ public class Participant {
 
                 /* Participant requests a transaction */
                 if (scannerInput.length() > 0){
+                    System.out.println("Hei");
                     this.requestNewTransaction(scannerInput);
                 }
             }
@@ -106,6 +107,7 @@ public class Participant {
      * @param query query-request from participant
      */
     private void requestNewTransaction(String query){
+        System.out.println("Hei");
         this.sendToCoordinator("REQUESTING NEW TRANSACTION--" + query);
     }
 
@@ -203,7 +205,9 @@ public class Participant {
     private String readFromCoordinator(){
         String response = "";
         try {
-            response = this.reader.readLine();
+            if (this.reader.ready()) {
+                response = this.reader.readLine();
+            }
         }
         catch (IOException ioe){
             ioe.printStackTrace();
