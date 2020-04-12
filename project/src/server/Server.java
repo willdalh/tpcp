@@ -1,5 +1,7 @@
 package server;
 
+import client.Client;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -24,7 +26,7 @@ public class Server {
 
         System.out.println("Server is running. Waiting for clients...");
         ServerSocket server = new ServerSocket(PORTNR);
-        List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<ClientHandler>());
+        ArrayList<ClientHandler> participants = new ArrayList<>();
         boolean wait = true;
         while(wait){
 
@@ -37,8 +39,8 @@ public class Server {
             Future<Object> promise = executor.submit(waiter);
             try {
                 Object res = promise.get(5, TimeUnit.SECONDS);
-                clients.add(new ClientHandler((Socket)res, id));
-                System.out.println("Client connected.\nClient id: " + id + "\nNumber of clients: " + clients.size() + "\n");
+                participants.add(new ClientHandler((Socket)res, id));
+                System.out.println("Client connected.\nClient id: " + id + "\nNumber of clients: " + participants.size() + "\n");
             } catch (TimeoutException toe) {
                 System.out.println("Stopped waiting for clients");
                 wait = false;
@@ -54,7 +56,7 @@ public class Server {
             id++;
         }
         System.out.println("Donn Morison");
-        Coordinator coordinator = new Coordinator();
+        Coordinator coordinator = new Coordinator(participants);
         server.close();
 
     }

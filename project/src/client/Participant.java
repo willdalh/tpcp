@@ -84,7 +84,7 @@ public class Participant {
                     while (!participantResponse.equals("YES") || !participantResponse.equals("NO")) {
                         participantResponse = scanner.nextLine();
                     }
-                    this.handleClientResponseToTransaction(participantResponse);
+                    this.handleParticipantResponse(participantResponse);
                 }
 
                 /* Participant requests a transaction */
@@ -105,7 +105,7 @@ public class Participant {
      * Requests a new transaction to the coordinator
      * @param query query-request from participant
      */
-    public void requestNewTransaction(String query){
+    private void requestNewTransaction(String query){
         this.sendToCoordinator("REQUESTING NEW TRANSACTION--" + query);
     }
 
@@ -115,7 +115,7 @@ public class Participant {
      *
      * @param participantResponse YES or NO
      */
-    public void handleClientResponseToTransaction(String participantResponse){
+    private void handleParticipantResponse(String participantResponse){
         String response;
         this.sendToCoordinator(participantResponse);
 
@@ -134,7 +134,7 @@ public class Participant {
      * Executes the instructions from the coordinator
      * @param instructions instructions to be executed
      */
-    public void executeInstructions(String instructions){
+    private void executeInstructions(String instructions){
         if (instructions.equals("COMMIT")){
             this.confirmRedoLog();
             this.sendToCoordinator("COMMITTED");
