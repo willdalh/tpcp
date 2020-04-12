@@ -13,6 +13,7 @@ public class Coordinator {
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
     private String status;
+    private int timeout = 40;
 
     /**
      * constructor that sets the participants list
@@ -50,7 +51,7 @@ public class Coordinator {
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
-            if(timer >= 20){
+            if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout\n");
                 messageAll("TRANSACTION--" + this.tractionStatement + "--Rollback");
                 return false;
@@ -85,7 +86,7 @@ public class Coordinator {
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
-            if(timer >= 20){
+            if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout");
                 messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
                 return false;
@@ -122,7 +123,9 @@ public class Coordinator {
                     if(!query.equals("")){
                         System.out.println("Got request\n");
                         query = query.split("--")[1];
+                        System.out.println("query: " + query);
                         waiting = false;
+                        break;
                     }
                 }
             }
