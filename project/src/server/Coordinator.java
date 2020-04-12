@@ -82,7 +82,7 @@ public class Coordinator {
                 answer = party.readFromParticipant();
                 if(answer.equals("COMMITTED")){
                     resCount++;
-                    System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
+                    System.out.println("participant nr. " + party.getId() + " has commited\n");
                 }else if(answer.equals("ABORTED")){
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
