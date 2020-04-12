@@ -22,7 +22,7 @@ public class Coordinator {
      */
     private boolean initTransaction(String query){
 
-        this.tractionStatement = query
+        this.tractionStatement = query;
         System.out.println("Initiating transaction:\n" + this.tractionStatement + "\n");
         messageAll("NEW TRANSACTION--" + this.tractionStatement + "--READY TO COMMIT?");
 
