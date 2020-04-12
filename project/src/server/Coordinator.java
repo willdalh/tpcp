@@ -48,14 +48,14 @@ public class Coordinator {
                     System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
                 }else if(answer.equals("NO")){
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
-                    messageAll("TRANSACTION--" + this.tractionStatement + "--Rollback");
+                    messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
                     return false;
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
             if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout\n");
-                messageAll("TRANSACTION--" + this.tractionStatement + "--Rollback");
+                messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
                 return false;
             }
         }
