@@ -65,7 +65,6 @@ public class Participant {
                 scannerInput = "";
                 if (System.in.available() > 0) {
                     scannerInput = scanner.nextLine();
-                    System.out.println(scannerInput);
                 }
                 /* Participant wishes to disconnect */
                 if (scannerInput.equals("SHUTDOWN")) {
@@ -84,9 +83,10 @@ public class Participant {
 
                     /* Check client's response to transaction */
                     String participantResponse = scanner.nextLine();
-                    while (!participantResponse.equals("YES") || !participantResponse.equals("NO")) {
+                    while (!participantResponse.matches("YES|NO")) {
                         participantResponse = scanner.nextLine();
                     }
+                    System.out.println(participantResponse);
                     this.handleParticipantResponse(participantResponse);
                 }
 
@@ -142,9 +142,9 @@ public class Participant {
             this.confirmRedoLog();
             this.sendToCoordinator("COMMITTED");
         }
-        else if (instructions.equals("ABORT")){
+        else if (instructions.equals("ROLLBACK")){
             this.confirmUndoLog();
-            this.sendToCoordinator("ABORTED");
+            this.sendToCoordinator("ROLLBACKED");
         }
     }
 

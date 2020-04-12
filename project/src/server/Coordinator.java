@@ -13,7 +13,7 @@ public class Coordinator {
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
     private String status;
-    private int timeout = 40;
+    private int timeout = 400;
 
     /**
      * constructor that sets the participants list
