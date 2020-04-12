@@ -21,6 +21,15 @@ public class ClientHandler{
     public ClientHandler(Socket connection, int id){
         this.connection = connection;
         this.id = id;
+
+        try {
+            readConnection = new InputStreamReader(connection.getInputStream());
+            reader = new BufferedReader(readConnection);
+            writer = new PrintWriter(connection.getOutputStream(), true);
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+        }
     }
 
     public int getId() {
@@ -34,13 +43,8 @@ public class ClientHandler{
      */
     public void sendToParticipant(String message) {
         try {
-            readConnection = new InputStreamReader(connection.getInputStream());
-            writer = new PrintWriter(connection.getOutputStream(), true);
-
             writer.println(message);
             System.out.println("Message is deliverd");
-
-            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,12 +60,7 @@ public class ClientHandler{
     public String readFromParticipant(){
         String line = "";
         try {
-            readConnection = new InputStreamReader(connection.getInputStream());
-            reader = new BufferedReader(readConnection);
             line = reader.readLine();
-
-            reader.close();
-
         }catch (IOException ioe){
             ioe.printStackTrace();
         }
