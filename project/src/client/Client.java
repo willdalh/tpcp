@@ -8,5 +8,6 @@ public class Client {
         Participant participant = new Participant();
         participant.startConnection();
         System.out.println("Hello");
+
     }
 }
