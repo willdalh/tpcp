@@ -22,9 +22,9 @@ public class Server {
         final int PORTNR = 3000;
         int id = 0;
 
+        System.out.println("Server is running. Waiting for clients...");
         ServerSocket server = new ServerSocket(PORTNR);
         List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<ClientHandler>());
-        System.out.println("Server is running. Waiting for clients...");
         boolean wait = true;
         while(wait){
 
