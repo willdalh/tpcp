@@ -59,7 +59,9 @@ public class ClientHandler{
     public String readFromParticipant(){
         String line = "";
         try {
-            line = reader.readLine();
+            if (this.reader.ready()) {
+                line = reader.readLine();
+            }
         }catch (IOException ioe){
             ioe.printStackTrace();
         }
