@@ -162,7 +162,7 @@ public class Participant {
     private String coordinatorGivingInstructions(String response){
         if (response != null){
             String instructions = response.split("--")[2];
-            if (!instructions.matches("COMMIT|ABORT")){
+            if (!instructions.matches("COMMIT|ROLLBACK")){
                 return "";
             }
             return instructions;
