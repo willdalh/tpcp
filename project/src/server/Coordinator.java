@@ -22,30 +22,69 @@ public class Coordinator {
      */
     private boolean initTransaction(String query){
 
-        System.out.println("Initiating transaction:\n" + query + "\n");
-        messageAll("NEW TRANSACTION--" + query + "--READY TO COMMIT?");
+        this.tractionStatement = query
+        System.out.println("Initiating transaction:\n" + this.tractionStatement + "\n");
+        messageAll("NEW TRANSACTION--" + this.tractionStatement + "--READY TO COMMIT?");
 
         long start = System.currentTimeMillis();
         long timer = 0L;
         int resCount = 0;
-        while(timer / 1000 < 20 && resCount < participants.size()){
+        while(resCount < participants.size()){
             for(ClientHandler party: participants){
                 if(party.readFromParticipant().equals("YES")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
                 }else if(party.readFromParticipant().equals("NO")){
-                    System.out.println("Transaction cancelled by participant nr. " + party.getId() + "\n");
-                    messageAll("TRANSACTION--" + query + "--ABORT");
+                    System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
+                    messageAll("TRANSACTION--" + this.tractionStatement + "--ABORT");
                     return false;
                 }
             }
-            timer = new Date().getTime() - start;
+            timer = (new Date().getTime() - start) / 1000;
+            if(timer >= 20){
+                System.out.println("Transaction aborted due to timeout\n");
+                messageAll("TRANSACTION--" + this.tractionStatement + "--ABORT");
+                return false;
+            }
         }
+        System.out.println("transcation successfully initiated\n");
         return true;
     }
 
+    /**
+     * This method instructs all participants to commit, and checks if they
+     * are all successfull
+     * @return      true if all participants commit successfully. else false
+     */
     private boolean commitTransaction(){
 
+        System.out.println("Commiting transaction");
+        messageAll("TRANSACTION--" + this.tractionStatement + "--COMMIT");
+
+        long start = System.currentTimeMillis();
+        long timer = 0L;
+        int resCount = 0;
+        while(resCount < participants.size()){
+            for(ClientHandler party: participants){
+                if(party.readFromParticipant().equals("COMMITTED")){
+                    resCount++;
+                    System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
+                }else if(party.readFromParticipant().equals("ABORTED")){
+                    System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
+                    messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+                    return false;
+                }
+            }
+            timer = (new Date().getTime() - start) / 1000;
+            if(timer >= 20){
+                System.out.println("Transaction aborted due to timeout");
+                messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+                return false;
+            }
+        }
+        System.out.println("Transaction commited\n");
+        messageAll("TRANSACTION--" + this.tractionStatement + "--SUCCESS");
+        return true;
     }
 
     private void messageAll(String query){
@@ -55,21 +94,29 @@ public class Coordinator {
         }
     }
 
-    private boolean success(){
-
-    }
-
-    private boolean rollback(){
-
-    }
-
     public void start(){
+        String query = "";
+        boolean waiting = true;
         /*
         wait for request;
         initTransactions();
         commitTransaction();
         success()/rollback();
          */
+        while(true){
+            while(waiting){
+                for(ClientHandler party: participants){
+                    query = party.readFromParticipant();
+                    if(!query.equals("")){
+                        waiting = false;
+                    }
+                }
+            }
+            if(initTransaction(query)){
+                commitTransaction();
+            }
+            waiting = true;
+        }
     }
 
 }
