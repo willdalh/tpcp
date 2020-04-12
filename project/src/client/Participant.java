@@ -62,10 +62,13 @@ public class Participant {
 
             boolean connected = true;
             while (connected) {
-                scannerInput = scanner.nextLine();
-
+                scannerInput = "";
+                if (System.in.available() > 0) {
+                    scannerInput = scanner.nextLine();
+                    System.out.println(scannerInput);
+                }
                 /* Participant wishes to disconnect */
-                if (scannerInput.equals("")) {
+                if (scannerInput.equals("SHUTDOWN")) {
                     this.sendToCoordinator("REQUESTING SHUTDOWN");
                     connected = false;
                 }
