@@ -39,12 +39,14 @@ public class Coordinator {
         long start = System.currentTimeMillis();
         long timer = 0L;
         int resCount = 0;
+        String answer = "";
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
-                if(party.readFromParticipant().equals("YES")){
+                answer = party.readFromParticipant();
+                if(answer.equals("YES")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
-                }else if(party.readFromParticipant().equals("NO")){
+                }else if(answer.equals("NO")){
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--Rollback");
                     return false;
@@ -74,12 +76,14 @@ public class Coordinator {
         long start = System.currentTimeMillis();
         long timer = 0L;
         int resCount = 0;
+        String answer = "";
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
-                if(party.readFromParticipant().equals("COMMITTED")){
+                answer = party.readFromParticipant();
+                if(answer.equals("COMMITTED")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
-                }else if(party.readFromParticipant().equals("ABORTED")){
+                }else if(answer.equals("ABORTED")){
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
                     return false;
