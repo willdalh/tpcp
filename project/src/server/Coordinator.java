@@ -14,6 +14,11 @@ public class Coordinator {
     private String tractionStatement;
     private String status;
 
+    /**
+     * constructor that sets the participants list
+     *
+     * @param participants      An ArrayList of ClientHandler objects
+     */
     public Coordinator(ArrayList<ClientHandler> participants){
         this.participants = participants;
     }
@@ -110,10 +115,12 @@ public class Coordinator {
         String query = "";
         boolean waiting = true;
         while(true){
+            System.out.println("Waiting for transaction request\n");
             while(waiting){
                 for(ClientHandler party: participants){
                     query = party.readFromParticipant();
                     if(!query.equals("")){
+                        System.out.println("Got request\n");
                         waiting = false;
                     }
                 }
