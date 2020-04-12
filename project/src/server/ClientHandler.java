@@ -64,7 +64,6 @@ public class ClientHandler{
         }catch (IOException ioe){
             ioe.printStackTrace();
         }
-        System.out.println("Closed");
         return line;
     }
 
