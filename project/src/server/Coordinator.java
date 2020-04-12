@@ -4,6 +4,10 @@ package server;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This class contains methods that handles two-phase-commit
+ * trasnsactions between participants
+ */
 public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
@@ -87,6 +91,11 @@ public class Coordinator {
         return true;
     }
 
+    /**
+     * This method sends a message to all participants
+     *
+     * @param query     the message to be sent
+     */
     private void messageAll(String query){
         String message = query;
         for(ClientHandler party: participants){
@@ -94,15 +103,12 @@ public class Coordinator {
         }
     }
 
+    /**
+     * This method starts a loop that handles incoming transactions
+     */
     public void start(){
         String query = "";
         boolean waiting = true;
-        /*
-        wait for request;
-        initTransactions();
-        commitTransaction();
-        success()/rollback();
-         */
         while(true){
             while(waiting){
                 for(ClientHandler party: participants){
