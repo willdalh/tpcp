@@ -10,6 +10,7 @@ public class ClientHandler{
     private int id;
     private BufferedReader reader;
     private PrintWriter writer;
+    InputStreamReader readConnection;
 
     /**
      * Takes in a socket connection and a client id as argument
@@ -33,7 +34,7 @@ public class ClientHandler{
      */
     public void sendToParticipant(String message) {
         try {
-            InputStreamReader readConnection = new InputStreamReader(connection.getInputStream());
+            readConnection = new InputStreamReader(connection.getInputStream());
             writer = new PrintWriter(connection.getOutputStream(), true);
 
             writer.println(message);
@@ -55,7 +56,7 @@ public class ClientHandler{
     public String readFromParticipant(){
         String line = "";
         try {
-            InputStreamReader readConnection = new InputStreamReader(connection.getInputStream());
+            readConnection = new InputStreamReader(connection.getInputStream());
             reader = new BufferedReader(readConnection);
             line = reader.readLine();
 
