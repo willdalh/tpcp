@@ -38,10 +38,9 @@ public class Server {
             try {
                 Object res = promise.get(5, TimeUnit.SECONDS);
                 clients.add(new ClientHandler((Socket)res, id));
-                clients.get(clients.size() - 1).start();
-                System.out.println("client connected.\nClient id: " + id + "\nNumber of clients: " + clients.size() + "\n");
+                System.out.println("Client connected.\nClient id: " + id + "\nNumber of clients: " + clients.size() + "\n");
             } catch (TimeoutException toe) {
-                System.out.println("Stoped waiting for clients");
+                System.out.println("Stopped waiting for clients");
                 wait = false;
             } catch (InterruptedException ie) {
                 ie.printStackTrace();

@@ -3,7 +3,7 @@ package client;
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
-
+import utils.*;
 
 /**
  * Class representing a participant in Two-Phase Commit Transaction
@@ -16,8 +16,12 @@ public class Participant {
 
     private String address;
     private int port;
-    private BufferedReader br;
-    private PrintWriter pw;
+    private BufferedReader reader;
+    private PrintWriter writer;
+
+    private String log = "";
+    private String undoLog = "";
+    private String redoLog = "";
 
     /**
      * Constructor with custom address and port
@@ -45,25 +49,178 @@ public class Participant {
         try{
             /* Creating socket connection and objects for communicating with server */
             Socket socket = new Socket(this.address, this.port);
-            System.out.println("Connected to server");
+
             InputStreamReader isr = new InputStreamReader(socket.getInputStream());
-            br = new BufferedReader(isr);
-            pw = new PrintWriter(socket.getOutputStream(), true);
+            reader = new BufferedReader(isr);
+            writer = new PrintWriter(socket.getOutputStream(), true);
 
-            System.out.println(br.readLine());
+            String response = this.readFromCoordinator();
+            System.out.println("COORDINATOR: " + response);
+
             Scanner scanner = new Scanner(System.in);
+            String scannerInput;
 
-            String scannerInput = scanner.nextLine();
-            while(!scannerInput.equals("")){
-                // User interaction here
+            boolean connected = true;
+            while (connected) {
+                scannerInput = scanner.nextLine();
+
+                /* Participant wishes to disconnect */
+                if (scannerInput.equals("")) {
+                    this.sendToCoordinator("REQUESTING SHUTDOWN");
+                    connected = false;
+                }
+
+                response = this.readFromCoordinator();
+                /* Check if coordinator is initiating transaction */
+                if (this.coordinatorInitiatingTransaction(response)) {
+                    String[] responseSplit = response.split("--");
+                    Utils.printStringArray(responseSplit);
+
+                    String query = responseSplit[1];
+                    this.appendToRedoLog(query);
+
+                    /* Check client's response to transaction */
+                    String participantResponse = scanner.nextLine();
+                    while (!participantResponse.equals("YES") || !participantResponse.equals("NO")) {
+                        participantResponse = scanner.nextLine();
+                    }
+                    this.handleClientResponseToTransaction(participantResponse);
+                }
+
+                /* Participant requests a transaction */
+                if (scannerInput.length() > 0){
+                    this.requestNewTransaction(scannerInput);
+                }
             }
 
-            br.close();
-            pw.close();
-            socket.close();
+            reader.close();
+            writer.close();
         }
         catch(Exception e){
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Requests a new transaction to the coordinator
+     * @param query query-request from participant
+     */
+    public void requestNewTransaction(String query){
+        this.sendToCoordinator("REQUESTING NEW TRANSACTION--" + query);
+    }
+
+    /**
+     * Handles the participant's response to the transaction
+     * Waits for instructions from coordinator
+     *
+     * @param participantResponse YES or NO
+     */
+    public void handleClientResponseToTransaction(String participantResponse){
+        String response;
+        this.sendToCoordinator(participantResponse);
+
+        response = this.readFromCoordinator();
+        /* Waits for instructions */
+        String instructions = "";
+        while (response == null && response.equals("")) {
+            response = this.readFromCoordinator();
+            instructions = this.coordinatorGivingInstructions(response);
+        }
+
+        this.executeInstructions(instructions);
+    }
+
+    /**
+     * Executes the instructions from the coordinator
+     * @param instructions instructions to be executed
+     */
+    public void executeInstructions(String instructions){
+        if (instructions.equals("COMMIT")){
+            this.confirmRedoLog();
+            this.sendToCoordinator("COMMITTED");
+        }
+        else if (instructions.equals("ABORT")){
+            this.confirmUndoLog();
+            this.sendToCoordinator("ABORTED");
+        }
+    }
+
+    /**
+     * Check instructions from coordinator
+     * @param response response from coordinator
+     * @return instructions if present, false otherwise
+     */
+    private String coordinatorGivingInstructions(String response){
+        if (response != null){
+            String instructions = response.split("--")[2];
+            if (!instructions.matches("COMMIT|ABORT")){
+                return "";
+            }
+            return instructions;
+        }
+        return "";
+    }
+
+    /**
+     * Appends query to the redo log
+     * @param query query to commit
+     */
+    private void appendToRedoLog(String query){
+        this.redoLog += query + "\n";
+    }
+
+    /**
+     * Sets the log to the redo log
+     */
+    private void confirmRedoLog(){
+        this.log = this.redoLog;
+    }
+
+    /**
+     * Sets the log back to the undo log
+     */
+    private void confirmUndoLog(){
+        this.log = this.undoLog;
+    }
+
+    /**
+     * Method for checking string to see if coordinator is initiating a transaction
+     * @param response
+     * @return true if coordinator initiating transaction, false otherwise
+     */
+    private boolean coordinatorInitiatingTransaction(String response){
+        if (response != null) {
+            return (response.split("--")[0].equals("NEW TRANSACTION"));
+        }
+        return false;
+    }
+
+    /**
+     * Method for reading messages from coordinator
+     *
+     * @return message from coordinator
+     */
+    private String readFromCoordinator(){
+        String response = "";
+        try {
+            response = this.reader.readLine();
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+        finally {
+            return response;
+        }
+    }
+
+    /**
+     * Method for sending message to coordinator
+     *
+     * @param message message to coordinator
+     */
+    private void sendToCoordinator(String message){
+        if (message != null) {
+            this.writer.println(message);
         }
     }
 }
