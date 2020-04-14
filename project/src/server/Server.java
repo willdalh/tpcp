@@ -34,7 +34,7 @@ public class Server {
             Callable<Object> waiter = new Callable<Object>() {
                 public Object call() throws IOException {
                     return server.accept();
-            }
+                }
             };
             Future<Object> promise = executor.submit(waiter);
             try {
@@ -42,6 +42,11 @@ public class Server {
                 participants.add(new ClientHandler((Socket)res, id));
                 participants.get(participants.size() - 1).sendToParticipant("You are connected");
                 System.out.println("Client connected.\nClient id: " + id + "\nNumber of clients: " + participants.size() + "\n");
+
+                /* ---------------- FOR DEBUG ------------- */
+                if (participants.size() == 2) wait = false;
+                /* ---------------------------------------- */
+
             } catch (TimeoutException toe) {
                 System.out.println("Stopped waiting for clients");
                 wait = false;

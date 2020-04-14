@@ -19,6 +19,8 @@ public class Participant {
     private BufferedReader reader;
     private PrintWriter writer;
 
+    private Scanner scanner;
+
     private String log = "";
     private String undoLog = "";
     private String redoLog = "";
@@ -57,17 +59,15 @@ public class Participant {
             String response = this.readFromCoordinatorWithBlocking();
             System.out.println("COORDINATOR: " + response);
 
-            Scanner scanner = new Scanner(System.in);
+            this.scanner = new Scanner(System.in);
             String scannerInput;
 
             boolean connected = true;
             while (connected) {
-                scannerInput = "";
-                if (System.in.available() > 0) {
-                    scannerInput = scanner.nextLine();
-                }
+                scannerInput = this.readFromScanner();
+
                 /* Participant wishes to disconnect */
-                if (scannerInput.equals("SHUTDOWN")) {
+                if (scannerInput.equals("!shutdown")) {
                     this.sendToCoordinator("REQUESTING SHUTDOWN");
                     connected = false;
                 }
@@ -82,11 +82,14 @@ public class Participant {
                     this.appendToRedoLog(query);
 
                     /* Check client's response to transaction */
-                    String participantResponse = scanner.nextLine();
+                    String participantResponse = "";
                     while (!participantResponse.matches("YES|NO")) {
-                        participantResponse = scanner.nextLine();
+                        participantResponse = this.readFromScanner();
                     }
-                    this.handleParticipantResponse(participantResponse);
+                    response = this.handleParticipantResponse(participantResponse);
+                    String instructions = this.coordinatorGivingInstructions(response);
+                    response = this.executeInstructionsAndReport(instructions);
+                    System.out.println("COORDINATOR: " + response);
                 }
 
                 /* Participant requests a transaction */
@@ -96,8 +99,9 @@ public class Participant {
                         System.out.println(this.log);
                         System.out.println("-----------------------------");
                     }
-                    else {
-                        this.requestNewTransaction(scannerInput);
+                    else if (scannerInput.split(" ")[0].equals("!request")) {
+                        String request = scannerInput.substring(("!request ").length());
+                        this.requestNewTransaction(request);
                     }
                 }
             }
@@ -108,6 +112,30 @@ public class Participant {
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Reads the current string in the scanner buffer
+     * @return input from user
+     */
+    private String readFromScanner(){
+        try {
+            if (System.in.available() > 0) {
+                return scanner.nextLine();
+            }
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * Waits until a string appears in the scanner buffer
+     * @return input from user
+     */
+    private String readFromScannerWithBlocking(){
+        return scanner.nextLine();
     }
 
     /**
@@ -124,24 +152,21 @@ public class Participant {
      *
      * @param participantResponse YES or NO
      */
-    private void handleParticipantResponse(String participantResponse){
+    private String handleParticipantResponse(String participantResponse){
         String response;
         this.sendToCoordinator(participantResponse);
 
         /* Waits for instructions */
-        String instructions = "";
         response = this.readFromCoordinatorWithBlocking();
         System.out.println("COORDINATOR: " + response);
-        instructions = this.coordinatorGivingInstructions(response);
-
-        this.executeInstructions(instructions);
+        return response;
     }
 
     /**
-     * Executes the instructions from the coordinator
+     * Executes the instructions from the coordinator, and reports back
      * @param instructions instructions to be executed
      */
-    private void executeInstructions(String instructions){
+    private String executeInstructionsAndReport(String instructions){
         if (instructions.equals("COMMIT")){
             this.confirmRedoLog();
             this.sendToCoordinator("COMMITTED");
@@ -152,6 +177,9 @@ public class Participant {
             this.sendToCoordinator("ROLLBACKED");
             System.out.println("Rollbacked");
         }
+        /* Waits for response */
+        String response = this.readFromCoordinatorWithBlocking();
+        return response;
     }
 
     /**
@@ -162,7 +190,7 @@ public class Participant {
     private String coordinatorGivingInstructions(String response){
         if (response != null){
             String instructions = response.split("--")[2];
-            if (!instructions.matches("COMMIT|ROLLBACK")){
+            if (instructions == null && !instructions.matches("COMMIT|ROLLBACK")){
                 return "";
             }
             return instructions;
@@ -182,6 +210,7 @@ public class Participant {
      * Sets the log to the redo log
      */
     private void confirmRedoLog(){
+        this.undoLog = this.redoLog;
         this.log = this.redoLog;
     }
 
@@ -189,6 +218,7 @@ public class Participant {
      * Sets the log back to the undo log
      */
     private void confirmUndoLog(){
+        this.redoLog = this.undoLog;
         this.log = this.undoLog;
     }
 
