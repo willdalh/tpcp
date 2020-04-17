@@ -84,17 +84,26 @@ public class Participant {
                     this.appendToRedoLog(query);
 
                     /* Check client's response to transaction */
-                    String participantResponse = this.waitForParticipantResponse();
+                    /* Also checks for premature instructions */
+                    String answerOrPrematureInstructions = this.waitForAnswer();
+                    String instructions = this.coordinatorGivingInstructions(answerOrPrematureInstructions);
+                    if (instructions.length() > 0){
+                        System.out.println("COORDINATOR: " + answerOrPrematureInstructions);
+                        System.out.println("CLIENT: PREMATURE INSTRUCTIONS RECEIVED");
+                    }
+                    else{
+                        /* Send YES or NO to coordinator and waits for instructions */
+                        response = this.handleParticipantResponse(answerOrPrematureInstructions);
 
-                    /* Send YES or NO to coordinator and waits for instructions */
-                    response = this.handleParticipantResponse(participantResponse);
-
-                    /* Checks if coordinator sent instructions */
-                    String instructions = this.coordinatorGivingInstructions(response);
+                        /* Checks if coordinator sent instructions */
+                        instructions = this.coordinatorGivingInstructions(response);
+                    }
 
                     /* Executes instructions and reports back either with COMMITTED or ROLLBACKED */
                     response = this.executeInstructionsAndReport(instructions);
                     System.out.println("COORDINATOR: " + response);
+                    System.out.println("CLIENT: You can now request a query with '!request query'");
+
                 }
 
                 if (scannerInput.length() > 0){
@@ -169,13 +178,18 @@ public class Participant {
      * Will also check if the participant sends premature instructions
      * @return
      */
-    private String waitForParticipantResponse(){
+    private String waitForAnswer(){
         String participantResponse = "";
+        String prematureInstructions = "";
         while (!(participantResponse.toUpperCase()).matches("YES|NO")) {
             if (participantResponse.length() > 0){
                 System.out.println("CLIENT: Please write either YES or NO");
             }
             participantResponse = (this.readFromScanner()).toUpperCase();
+            prematureInstructions = this.readFromCoordinator();
+            if (prematureInstructions.length() > 0){
+                return prematureInstructions;
+            }
         }
         return participantResponse;
     }
@@ -223,11 +237,14 @@ public class Participant {
      */
     private String coordinatorGivingInstructions(String response){
         if (response != null){
-            String instructions = response.split("--")[2];
-            if (instructions == null && !instructions.matches("COMMIT|ROLLBACK")){
-                return "";
+            String[] responseSplit = response.split("--");
+            if (responseSplit.length == 3){
+                String instructions = response.split("--")[2];
+                if (instructions == null && !instructions.matches("COMMIT|ROLLBACK")){
+                    return "";
+                }
+                return instructions;
             }
-            return instructions;
         }
         return "";
     }
