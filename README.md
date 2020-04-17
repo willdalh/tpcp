@@ -11,7 +11,10 @@
 ## Installasjonsinstruksjoner
 
 ```
-Test
+1: Clone the project
+2: Make sure you have java version 10
+3: Run server.java
+4: Run as many instances of Client.java or Client2.java within *INSERT TIMEFRAME FOR CONNECTIOON* after starting server.java
 ```
 
 ## API
