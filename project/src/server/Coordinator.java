@@ -12,7 +12,6 @@ public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
-    private String status;
     private int timeout = 400;
 
     /**
@@ -49,6 +48,7 @@ public class Coordinator {
                 }else if(answer.equals("NO")){
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+                    waitForRollbacked(0);
                     return false;
                 }
             }
@@ -56,6 +56,7 @@ public class Coordinator {
             if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout\n");
                 messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+                waitForRollbacked(0);
                 return false;
             }
         }
@@ -83,9 +84,10 @@ public class Coordinator {
                 if(answer.equals("COMMITTED")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " has commited\n");
-                }else if(answer.equals("ABORTED")){
+                }else if(answer.equals("ROLLBACKED")){
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+                    waitForRollbacked(1);
                     return false;
                 }
             }
@@ -93,6 +95,7 @@ public class Coordinator {
             if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout");
                 messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+                waitForRollbacked(0);
                 return false;
             }
         }
@@ -113,6 +116,29 @@ public class Coordinator {
         }
     }
 
+    private boolean waitForRollbacked(int startCount){
+        long start = System.currentTimeMillis();
+        long timer = 0L;
+        int resCount = startCount;
+        String answer = "";
+        while(resCount < participants.size()){
+            for(ClientHandler party: participants){
+                answer = party.readFromParticipant();
+                if(answer.equals("ROLLBACKED")){
+                    resCount++;
+                    System.out.println("participant nr. " + party.getId() + " rolled back\n");
+                }
+            }
+        }
+        timer = (new Date().getTime() - start) / 1000;
+        if(timer >= this.timeout){
+            System.out.println("Stopped waiting for rollback due to timeout");
+            messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+            return false;
+        }
+        return true;
+    }
+
     /**
      * This method starts a loop that handles incoming transactions
      */
@@ -124,12 +150,15 @@ public class Coordinator {
             while(waiting){
                 for(ClientHandler party: participants){
                     query = party.readFromParticipant();
-                    if(!query.equals("")){
-                        System.out.println("Got request\n");
+                    if(!query.equals("") && query.contains("--")){
+                        System.out.println("Got request:\n query:\n" + query);
                         query = query.split("--")[1];
                         System.out.println("query: " + query);
                         waiting = false;
                         break;
+                    }else if(!query.equals("")){
+                        System.err.println("Recieved invalid transaction request from Client:\n");
+                        System.out.println("query: " + query + "\n");
                     }
                 }
             }
