@@ -129,13 +129,13 @@ public class Coordinator {
                     System.out.println("participant nr. " + party.getId() + " rolled back\n");
                 }
             }
+            timer = (new Date().getTime() - start) / 1000;
+            if(timer >= this.timeout){
+                System.out.println("Stopped waiting for rollback due to timeout");
+                return false;
+            }
         }
-        timer = (new Date().getTime() - start) / 1000;
-        if(timer >= this.timeout){
-            System.out.println("Stopped waiting for rollback due to timeout");
-            messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-            return false;
-        }
+        messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACKED");
         return true;
     }
 
