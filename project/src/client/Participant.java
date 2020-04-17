@@ -47,7 +47,7 @@ public class Participant {
      * Method for starting connection with the server
      */
     public void startConnection(){
-        System.out.println("Attempting to connect to server");
+        System.out.println("CLIENT: Attempting to connect to server");
         try{
             /* Creating socket connection and objects for communicating with server */
             Socket socket = new Socket(this.address, this.port);
@@ -58,6 +58,8 @@ public class Participant {
 
             String response = this.readFromCoordinatorWithBlocking();
             System.out.println("COORDINATOR: " + response);
+            System.out.println("CLIENT: You can now request a query with '!request query'");
+            System.out.println("CLIENT: Display the log with '!showlog'");
 
             this.scanner = new Scanner(System.in);
             String scannerInput;
@@ -82,35 +84,49 @@ public class Participant {
                     this.appendToRedoLog(query);
 
                     /* Check client's response to transaction */
-                    String participantResponse = "";
-                    while (!participantResponse.matches("YES|NO")) {
-                        participantResponse = this.readFromScanner();
-                    }
+                    String participantResponse = this.waitForParticipantResponse();
+
+                    /* Send YES or NO to coordinator and waits for instructions */
                     response = this.handleParticipantResponse(participantResponse);
+
+                    /* Checks if coordinator sent instructions */
                     String instructions = this.coordinatorGivingInstructions(response);
+
+                    /* Executes instructions and reports back either with COMMITTED or ROLLBACKED */
                     response = this.executeInstructionsAndReport(instructions);
                     System.out.println("COORDINATOR: " + response);
                 }
 
-                /* Participant requests a transaction */
                 if (scannerInput.length() > 0){
+                    /* Participant wishes to see the log */
                     if (scannerInput.equals("!showlog")){
-                        System.out.println("-------------LOG-------------");
-                        System.out.println(this.log);
-                        System.out.println("-----------------------------");
+                        System.out.println("CLIENT:\n" + this.getLog());
                     }
+                    /* Participant requests a transaction */
                     else if (scannerInput.split(" ")[0].equals("!request")) {
-                        String request = scannerInput.substring(("!request ").length());
-                        this.requestNewTransaction(request);
+                        this.handleRequest(scannerInput);
                     }
                 }
             }
-
             reader.close();
             writer.close();
         }
         catch(Exception e){
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handles a participant's request for a new transaction
+     * @param input input from scanner starting with '!request'
+     */
+    private void handleRequest(String input){
+        if (input.trim().length() > ("!request").length()){
+            String request = input.substring(("!request ").length());
+            this.requestNewTransaction(request);
+        }
+        else {
+            System.out.println("CLIENT: Invalid format for request");
         }
     }
 
@@ -144,6 +160,24 @@ public class Participant {
      */
     private void requestNewTransaction(String query){
         this.sendToCoordinator("REQUESTING NEW TRANSACTION--" + query);
+        System.out.println("CLIENT: You requested a transaction with query: " + query);
+    }
+
+
+    /**
+     * Waits for response from participant regarding the transaction
+     * Will also check if the participant sends premature instructions
+     * @return
+     */
+    private String waitForParticipantResponse(){
+        String participantResponse = "";
+        while (!(participantResponse.toUpperCase()).matches("YES|NO")) {
+            if (participantResponse.length() > 0){
+                System.out.println("CLIENT: Please write either YES or NO");
+            }
+            participantResponse = (this.readFromScanner()).toUpperCase();
+        }
+        return participantResponse;
     }
 
     /**
@@ -153,11 +187,11 @@ public class Participant {
      * @param participantResponse YES or NO
      */
     private String handleParticipantResponse(String participantResponse){
-        String response;
         this.sendToCoordinator(participantResponse);
+        System.out.println("CLIENT: Waiting for instructions from COORDINATOR");
 
         /* Waits for instructions */
-        response = this.readFromCoordinatorWithBlocking();
+        String response = this.readFromCoordinatorWithBlocking();
         System.out.println("COORDINATOR: " + response);
         return response;
     }
@@ -170,12 +204,12 @@ public class Participant {
         if (instructions.equals("COMMIT")){
             this.confirmRedoLog();
             this.sendToCoordinator("COMMITTED");
-            System.out.println("Committed");
+            System.out.println("CLIENT: Committed");
         }
         else if (instructions.equals("ROLLBACK")){
             this.confirmUndoLog();
             this.sendToCoordinator("ROLLBACKED");
-            System.out.println("Rollbacked");
+            System.out.println("CLIENT: Rollbacked");
         }
         /* Waits for response */
         String response = this.readFromCoordinatorWithBlocking();
@@ -281,5 +315,17 @@ public class Participant {
         if (message != null) {
             this.writer.println(message);
         }
+    }
+
+    /**
+     * Returns the log formatted
+     * @return formatted log
+     */
+    private String getLog(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("-------------LOG-------------\n");
+        stringBuilder.append(this.log + "\n");
+        stringBuilder.append("-----------------------------\n");
+        return stringBuilder.toString();
     }
 }
