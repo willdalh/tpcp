@@ -5,6 +5,8 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
 
+import server.*;
+
 /**
  * This class handles connection requests from clients and creates
  * a new instance of ClientHandler for each new client, and adds it
