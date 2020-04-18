@@ -24,8 +24,8 @@ class ClentHandlerTest {
         when(mockSocket.getInputStream()).thenReturn(mock(InputStream.class));
         when(mockSocket.getOutputStream()).thenReturn(mock(OutputStream.class));
         clientHandler = new ClientHandler(mockSocket, 1);
-        clientHandler.reader = mockReader;
-        clientHandler.writer = mockWriter;
+        clientHandler.setReader(mockReader);
+        clientHandler.setWriter(mockWriter);
     }
 
     @AfterEach

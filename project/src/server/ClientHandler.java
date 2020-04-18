@@ -8,8 +8,8 @@ import java.net.Socket;
 public class ClientHandler{
     private Socket connection = null;
     private int id;
-    public BufferedReader reader;
-    public PrintWriter writer;
+    private BufferedReader reader;
+    private PrintWriter writer;
     InputStreamReader readConnection;
 
     /**
@@ -72,5 +72,13 @@ public class ClientHandler{
 
     public String toString(){
         return "ClientHandler for participant with id " + this.getId();
+    }
+
+    public void setReader(BufferedReader reader) {
+        this.reader = reader;
+    }
+
+    public void setWriter(PrintWriter writer) {
+        this.writer = writer;
     }
 }
