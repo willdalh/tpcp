@@ -24,6 +24,7 @@ public class Participant {
     private String log = "";
     private String undoLog = "";
     private String redoLog = "";
+    private String pattern = "^[a-zA-Z0-9!]+$";
 
     private boolean connected;
 
@@ -67,6 +68,7 @@ public class Participant {
             connected = true;
             while (connected) {
                 scannerInput = this.readFromScanner();
+
 
                 response = this.readFromCoordinator();
 
@@ -129,7 +131,12 @@ public class Participant {
     private void handleRequest(String input){
         if (input.trim().length() > ("!request").length()){
             String request = input.substring(("!request ").length());
-            this.requestNewTransaction(request);
+            if (!request.matches(pattern)){
+                System.out.println("Not valid");
+            }else {
+                System.out.println(request);
+                this.requestNewTransaction(request);
+            }
         }
         else {
             System.out.println("CLIENT: Invalid format for request");

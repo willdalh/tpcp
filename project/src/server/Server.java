@@ -63,7 +63,7 @@ public class Server {
             id++;
         }
         System.out.println("Donn Morison");
-        System.out.println(participants + "---------------");
+        System.out.println(participants + " Are connected");
         Coordinator coordinator = new Coordinator(participants);
         coordinator.start();
         //server.close();
