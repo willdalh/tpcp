@@ -1,8 +1,17 @@
 package client;
 
+import java.io.IOException;
+import java.net.Socket;
+
 public class Client2 {
     public static void main(String[] args) {
-        Participant participant = new Participant();
-        participant.startConnection();
+        Participant participant = new Participant(System.in);
+        try {
+            Socket socket = new Socket(participant.getAddress(), participant.getPort());
+            participant.startConnection(socket);
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+        }
     }
 }
