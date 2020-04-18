@@ -1,36 +1,18 @@
-image: java:latest
+image: maven:3-jdk-10
 
 stages:
   - build
-  - execute
-  - test
   - deploy
-    
-build:
+
+maven-build:
   stage: build
-  script: 
-    - /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/ClientHandler.java
-    - /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/Coordinator.java
-    - /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/Server.java
+  script: "mvn package"
   artifacts:
     paths:
-     - ClientHandler.*
-     - Coordinator.*
-     - Server.*
-     
-execute:
-  stage: execute
-  script:
-    - cd project/src/server
-    - /usr/lib/jvm/java-8-openjdk-amd64/bin/java project/src/server/Server
-  
-test:
-  stage: test
-  script:
-    - gradle test
-  artifacts:
+      - target/surefire-reports/TEST-*.xml
     reports:
-      junit: build/test-results/test/**/TEST-*.xml
+      junit:
+        - target/surefire-reports/TEST-*.xml
       
       
 pages:

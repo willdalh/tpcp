@@ -44,8 +44,20 @@ class ClentHandlerTest {
     void readFromParticipant() throws IOException {
         when(mockReader.ready()).thenReturn(true).thenReturn(false);
         when(mockReader.readLine()).thenReturn("hei");
-        assertEquals("hei", clientHandler.readFromParticipant());
-        assertEquals("", clientHandler.readFromParticipant());
+        assertEquals("hei", clientHandler.readFromParticipant(), "Wrong response");
+        assertEquals("", clientHandler.readFromParticipant(), "Wrong response");
     }
 
+    @Test
+    void getId()
+    {
+        int id = clientHandler.getId();
+        assertEquals(id, 1, "Wrong id");
+    }
+
+    @Test
+    void toStringTest(){
+        String ans = clientHandler.toString();
+        assertEquals(ans, "ClientHandler for participant with id 1", "Wrong toString()");
+    }
 }
