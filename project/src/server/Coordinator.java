@@ -151,8 +151,16 @@ public class Coordinator {
         }
     }
 
+<<<<<<< HEAD
 
 
+=======
+    /**
+     * This method waits for all participants to rollback.
+     * @param startCount        how many participanhts that have already rollbacked.
+     * @return          true if all participants respond with ROLLBACKED. Else false.
+     */
+>>>>>>> 40ffc6dd9824775e65f3f97df677005f5642697d
     private boolean waitForRollbacked(int startCount){
         long start = System.currentTimeMillis();
         long timer = 0L;
