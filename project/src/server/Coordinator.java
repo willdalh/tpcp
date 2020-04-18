@@ -11,7 +11,7 @@ public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
-    private int timeout = 10;
+    private int timeout = 5;
     private ArrayList<Integer> timeOutId = new ArrayList<>();
 
 
@@ -45,7 +45,11 @@ public class Coordinator {
                 if(answer.equals("YES")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
+                    System.out.println(party.getId());
+                    timeOutId.add(party.getId());
                 }else if(answer.equals("NO")){
+                    System.out.println(party.getId());
+                    timeOutId.add(party.getId());
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
 
@@ -86,7 +90,7 @@ public class Coordinator {
                 if(answer.equals("COMMITTED")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " has commited\n");
-                }else if(answer.equals("ROLLBACKED")){
+                }else if(answer.equals("ROLLBACKED")) {
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
                     waitForRollbacked(1);
@@ -126,24 +130,50 @@ public class Coordinator {
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
                 answer = party.readFromParticipant();
+
+                if (timeOutId.isEmpty()){
+                    messageAll("shutdown");
+                }else if(!timeOutId.contains(party.getId())) {
+                    System.out.println(party.getId());
+                    party.sendToParticipant("YOU HAVE BEEN DISCONECTED DUE TO INACTIVITY");
+                    party.sendToParticipant(" TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
+
+                    participants.remove(party);
+                    //party.sendToParticipant();
+                    System.out.println(participants);
+                    System.out.println("----------------");
+
+                }
+
                 if(answer.equals("ROLLBACKED")) {
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " rolled back\n");
 
 
-                        if (!timeOutId.contains(party.getId())) {
-                            System.out.println(party.getId());
-                            party.sendToParticipant("YOU HAVE BEEN DISCONECTED DUE TO INACTIVITY");
 
-                            System.out.println(participants);
-                            System.out.println("----------------");
-
-                        }
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
             if(timer >= this.timeout){
+
                 System.out.println("Stopped waiting for rollback due to timeout");
+
+                /*Does not work
+                for (int i = 0; i < participants.size(); i++){
+                    if (!timeOutId.contains(participants.get(i).getId())){
+                        int party = participants.get(i).getId();
+                        System.out.println(party);
+                        participants.get(i).sendToParticipant("YOU HAVE BEEN DISCONECTED DUE TO INACTIVITY");
+                        participants.get(i).sendToParticipant("shutdown");
+
+                        participants.remove(party);
+                        //party.sendToParticipant();
+                        System.out.println(participants);
+                        System.out.println("----------------");
+                    }
+                }
+
+ */
 
                 return false;
             }
@@ -155,6 +185,11 @@ public class Coordinator {
     /**
      * This method starts a loop that handles incoming transactions
      */
+
+    public void close(){
+
+    }
+
     public void start(){
 
         String query = "";
@@ -164,12 +199,14 @@ public class Coordinator {
             while(waiting){
                 for(ClientHandler party: participants){
                     query = party.readFromParticipant();
+                    if (query.equals("REQUESTING SHUTDOWN")){
+                        break;
+                    }
                     if(!query.equals("") && query.contains("--")){
                         System.out.println("Got request:\n query:\n" + query);
                         query = query.split("--")[1];
                         System.out.println("query: " + query);
-                        System.out.println(party.getId());
-                        timeOutId.add(party.getId());
+
                         waiting = false;
                         break;
                     }else if(!query.equals("")){

@@ -23,7 +23,8 @@ public class ParticipantTest {
     }
 
     @Test
-    void (){
+    void test(){
+        participant.startConnection();
         assertEquals(1234336567, mockSocket.getPort());
         assertEquals(124, mockSocket.getPort());
     }

@@ -48,11 +48,11 @@ public class Participant {
     /**
      * Method for starting connection with the server
      */
-    public void startConnection(Socket socket){
+    public void startConnection(){
         System.out.println("CLIENT: Attempting to connect to server");
         try{
             /* Creating socket connection and objects for communicating with server */
-            //Socket socket = new Socket(this.address, this.port);
+            Socket socket = new Socket(this.address, this.port);
 
             InputStreamReader isr = new InputStreamReader(socket.getInputStream());
             reader = new BufferedReader(isr);
@@ -77,6 +77,9 @@ public class Participant {
                 }
 
                 response = this.readFromCoordinator();
+
+
+
                 /* Check if coordinator is initiating transaction */
                 if (this.coordinatorInitiatingTransaction(response)) {
                     String[] responseSplit = response.split("--");
@@ -185,6 +188,7 @@ public class Participant {
         String participantResponse = "";
         String prematureInstructions = "";
         while (!(participantResponse.toUpperCase()).matches("YES|NO")) {
+
             if (participantResponse.length() > 0){
                 System.out.println("CLIENT: Please write either YES or NO");
             }
@@ -209,6 +213,8 @@ public class Participant {
 
         /* Waits for instructions */
         String response = this.readFromCoordinatorWithBlocking();
+
+
         System.out.println("COORDINATOR: " + response);
         return response;
     }
@@ -355,13 +361,5 @@ public class Participant {
         stringBuilder.append(this.log + "\n");
         stringBuilder.append("-----------------------------\n");
         return stringBuilder.toString();
-    }
-
-    public int getPort(){
-        return this.port;
-    }
-
-    public String getAddress(){
-        return this.address;
     }
 }
