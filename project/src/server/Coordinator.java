@@ -135,11 +135,9 @@ public class Coordinator {
                     messageAll("shutdown");
                 }else if(!timeOutId.contains(party.getId())) {
                     System.out.println(party.getId());
-                    party.sendToParticipant("YOU HAVE BEEN DISCONECTED DUE TO INACTIVITY");
-                    party.sendToParticipant(" TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
+                    party.sendToParticipant("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
 
                     participants.remove(party);
-                    //party.sendToParticipant();
                     System.out.println(participants);
                     System.out.println("----------------");
 
