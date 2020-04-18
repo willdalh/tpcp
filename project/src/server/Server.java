@@ -40,7 +40,7 @@ public class Server {
             try {
                 Object res = promise.get(10, TimeUnit.SECONDS);
                 participants.add(new ClientHandler((Socket)res, id));
-                participants.get(participants.size() - 1).sendToParticipant("You are connected");
+                participants.get(participants.size() - 1).sendToParticipant("You are connected with id " + id);
                 System.out.println("Client connected.\nClient id: " + id + "\nNumber of clients: " + participants.size() + "\n");
 
                 /* ---------------- FOR DEBUG ------------- */

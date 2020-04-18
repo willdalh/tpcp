@@ -70,4 +70,7 @@ public class ClientHandler{
         return line;
     }
 
+    public String toString(){
+        return "ClientHandler for participant with id " + this.getId();
+    }
 }

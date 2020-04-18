@@ -24,6 +24,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+<<<<<<< HEAD
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5.4">
         <CLASSES>
@@ -40,6 +41,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="org.mockito:mockito-all:1.10.19" level="project" />
+    <orderEntry type="library" name="mockito-core-3.3.3" level="project" />
   </component>
 </module>

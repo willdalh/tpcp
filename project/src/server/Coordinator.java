@@ -140,8 +140,6 @@ public class Coordinator {
                             System.out.println(party.getId());
                             party.sendToParticipant("YOU HAVE BEEN DISCONECTED DUE TO INACTIVITY");
 
-
-                            participants.remove(party);
                             System.out.println(participants);
                             System.out.println("----------------");
 
