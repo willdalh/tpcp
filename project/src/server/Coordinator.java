@@ -227,9 +227,6 @@ public class Coordinator {
             while(waiting){
                 for(ClientHandler party: participants){
                     query = party.readFromParticipant();
-                    if (query.equals("REQUESTING SHUTDOWN")){
-                        break;
-                    }
                     if(!query.equals("") && query.contains("--")){
                         System.out.println("Got request:\n query:\n" + query);
                         query = query.split("--")[1];
