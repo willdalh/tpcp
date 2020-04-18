@@ -14,13 +14,15 @@ build:
     - /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/Server.java
   artifacts:
     paths:
-     - Server.*
      - ClientHandler.*
      - Coordinator.*
+     - Server.*
      
 execute:
   stage: execute
-  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/java project/src/server/Server
+  script:
+    - cd project/src/server
+    - /usr/lib/jvm/java-8-openjdk-amd64/bin/java project/src/server/Server
   
 test:
   stage: test
