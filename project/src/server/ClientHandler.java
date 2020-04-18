@@ -41,12 +41,14 @@ public class ClientHandler{
      * @param message is the instruction to the participant
      * This methode uses the printwriter function to write the instruction to the participant
      */
-    public void sendToParticipant(String message) {
+    public boolean sendToParticipant(String message) {
         try {
             writer.println(message);
             System.out.println("Message is deliverd");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
