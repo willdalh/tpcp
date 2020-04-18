@@ -46,11 +46,11 @@ public class Participant {
     /**
      * Method for starting connection with the server
      */
-    public void startConnection(){
+    public void startConnection(Socket socket){
         System.out.println("CLIENT: Attempting to connect to server");
         try{
             /* Creating socket connection and objects for communicating with server */
-            Socket socket = new Socket(this.address, this.port);
+            //Socket socket = new Socket(this.address, this.port);
 
             InputStreamReader isr = new InputStreamReader(socket.getInputStream());
             reader = new BufferedReader(isr);
@@ -344,5 +344,13 @@ public class Participant {
         stringBuilder.append(this.log + "\n");
         stringBuilder.append("-----------------------------\n");
         return stringBuilder.toString();
+    }
+
+    public int getPort(){
+        return this.port;
+    }
+
+    public String getAddress(){
+        return this.address;
     }
 }
