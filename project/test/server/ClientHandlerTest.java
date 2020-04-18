@@ -3,9 +3,7 @@ package server;
 import org.junit.jupiter.api.*;
 import static org.mockito.Mockito.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,14 +12,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClentHandlerTest {
 
     Socket mockSocket;
+    BufferedReader mockReader;
+    PrintWriter mockWriter;
     ClientHandler clientHandler;
 
     @BeforeEach
     void setUp() throws IOException {
         mockSocket = mock(Socket.class);
+        mockReader = mock(BufferedReader.class);
+        mockWriter = mock(PrintWriter.class);
         when(mockSocket.getInputStream()).thenReturn(mock(InputStream.class));
         when(mockSocket.getOutputStream()).thenReturn(mock(OutputStream.class));
-        this.clientHandler = new ClientHandler(mockSocket, 1);
+        clientHandler = new ClientHandler(mockSocket, 1);
+        clientHandler.reader = mockReader;
+        clientHandler.writer = mockWriter;
     }
 
     @AfterEach
@@ -38,8 +42,10 @@ class ClentHandlerTest {
 
     @Test
     void readFromParticipant() throws IOException {
-        when(clientHandler.reader.readLine()).thenReturn("hei");
+        when(mockReader.ready()).thenReturn(true).thenReturn(false);
+        when(mockReader.readLine()).thenReturn("hei");
         assertEquals("hei", clientHandler.readFromParticipant());
+        assertEquals("", clientHandler.readFromParticipant());
     }
 
 }
