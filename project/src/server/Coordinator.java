@@ -2,6 +2,7 @@ package server;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * This class contains methods that handles two-phase-commit
@@ -13,6 +14,7 @@ public class Coordinator {
     private String tractionStatement;
     private int timeout = 5;
     private ArrayList<Integer> timeOutId = new ArrayList<>();
+
 
 
     /**
@@ -61,9 +63,36 @@ public class Coordinator {
             if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout\n");
                 System.out.println(timeOutId + "id");
-                messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-                waitForRollbacked(0);
+
+                if (timeOutId .isEmpty()){
+                    messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
+                }
+                for (int i = 0; i < participants.size(); i++){
+                    if (!timeOutId.contains(participants.get(i).getId())){
+                        int party = participants.get(i).getId();
+                        System.out.println(party + "PARTY");
+
+                        participants.get(i).sendToParticipant("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
+
+                        participants.remove(party);
+                        System.out.println(participants);
+                        System.out.println("----------------");
+                    }
+                }
+
+
+                for (int i = 0; i < participants.size(); i++) {
+                    System.out.println(participants.get(i) + " PARTY MESSAGE");
+                    participants.get(i).sendToParticipant("TRANSACTION!--" + this.tractionStatement + "--ROLLBACK");
+                }
+                return true;
+
+                /*
+               //messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+               waitForRollbacked(0);
                 return false;
+
+                 */
             }
         }
         System.out.println("transcation successfully initiated\n");
@@ -122,6 +151,8 @@ public class Coordinator {
         }
     }
 
+
+
     private boolean waitForRollbacked(int startCount){
         long start = System.currentTimeMillis();
         long timer = 0L;
@@ -130,9 +161,9 @@ public class Coordinator {
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
                 answer = party.readFromParticipant();
-
+/*
                 if (timeOutId.isEmpty()){
-                    messageAll("shutdown");
+                    messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
                 }else if(!timeOutId.contains(party.getId())) {
                     System.out.println(party.getId());
                     party.sendToParticipant("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
@@ -142,6 +173,8 @@ public class Coordinator {
                     System.out.println("----------------");
 
                 }
+
+ */
 
                 if(answer.equals("ROLLBACKED")) {
                     resCount++;
@@ -156,43 +189,38 @@ public class Coordinator {
 
                 System.out.println("Stopped waiting for rollback due to timeout");
 
-                /*Does not work
-                for (int i = 0; i < participants.size(); i++){
-                    if (!timeOutId.contains(participants.get(i).getId())){
-                        int party = participants.get(i).getId();
-                        System.out.println(party);
-                        participants.get(i).sendToParticipant("YOU HAVE BEEN DISCONECTED DUE TO INACTIVITY");
-                        participants.get(i).sendToParticipant("shutdown");
-
-                        participants.remove(party);
-                        //party.sendToParticipant();
-                        System.out.println(participants);
-                        System.out.println("----------------");
-                    }
-                }
-
- */
 
                 return false;
             }
         }
+
+        /*Wrong placement
+        for (int i = 0; i < participants.size(); i++) {
+            System.out.println(participants.get(i) + " PARTMESSAGEALL");
+            participants.get(i).sendToParticipant("TRANSACTION--" + this.tractionStatement + "--ROLLBACKED");
+        }
+        return true;
+
+         */
+
         messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACKED");
         return true;
+
+
     }
 
     /**
      * This method starts a loop that handles incoming transactions
      */
 
-    public void close(){
 
-    }
 
     public void start(){
 
         String query = "";
         boolean waiting = true;
         while(true){
+           
             System.out.println("Waiting for transaction request\n");
             while(waiting){
                 for(ClientHandler party: participants){
