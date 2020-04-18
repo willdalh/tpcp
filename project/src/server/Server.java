@@ -48,6 +48,7 @@ public class Server {
                 /* ---------------------------------------- */
 
             } catch (TimeoutException toe) {
+
                 System.out.println("Stopped waiting for clients");
                 wait = false;
             } catch (InterruptedException ie) {
@@ -62,6 +63,7 @@ public class Server {
             id++;
         }
         System.out.println("Donn Morison");
+        System.out.println(participants + "---------------");
         Coordinator coordinator = new Coordinator(participants);
         coordinator.start();
         //server.close();
