@@ -23,7 +23,18 @@ Lenke til API her
 
 ## Innledning/Introduksjon
 
-Vi har laget dette. Dette avsnittet kan også være rett under tittelen
+Dette avsnittet kan også være rett under tittelen
+
+
+Vi har programert en two-phase commit protokoll. Denne protokollen sikrer atomiske transaktsjoner.
+
+Fase en:
+I den første fasen forberedes alle transaksjonene. Alle klientene må også svare ja/nei om de har intruffet et problem.
+
+Fase to:
+Om alle klientene stemte ja i forrige fase blir endringen lagret. Om en klient stemte nei blir tansaksjonen kanselert.
+Kordinatoren informerer da alle klientene og sørger for at ingen endringer blir lagret.
+
 
 ## Beskrivelse
 
@@ -42,6 +53,7 @@ Vi har laget dette. Dette avsnittet kan også være rett under tittelen
 #### Mangler
 
 #### Mulige forbedringer
+	-En GUI interface
 
 ## Gruppemedlemmer
 
