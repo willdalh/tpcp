@@ -8,8 +8,8 @@ import java.net.Socket;
 public class ClientHandler{
     private Socket connection = null;
     private int id;
-    private BufferedReader reader;
-    private PrintWriter writer;
+    public BufferedReader reader;
+    public PrintWriter writer;
     InputStreamReader readConnection;
 
     /**

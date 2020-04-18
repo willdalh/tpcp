@@ -12,7 +12,9 @@ public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
-    private int timeout = 400;
+    private int timeout = 10;
+    private ArrayList<Integer> timeOutId = new ArrayList<>();
+
 
     /**
      * constructor that sets the participants list
@@ -30,7 +32,6 @@ public class Coordinator {
      * @return          true if all participants are ready to commit. else false
      */
     private boolean initTransaction(String query){
-
         this.tractionStatement = query;
         System.out.println("Initiating transaction:\n" + this.tractionStatement + "\n");
         messageAll("NEW TRANSACTION--" + this.tractionStatement + "--READY TO COMMIT?");
@@ -48,6 +49,7 @@ public class Coordinator {
                 }else if(answer.equals("NO")){
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+
                     waitForRollbacked(0);
                     return false;
                 }
@@ -55,6 +57,7 @@ public class Coordinator {
             timer = (new Date().getTime() - start) / 1000;
             if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout\n");
+                System.out.println(timeOutId + "id");
                 messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
                 waitForRollbacked(0);
                 return false;
@@ -124,14 +127,27 @@ public class Coordinator {
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
                 answer = party.readFromParticipant();
-                if(answer.equals("ROLLBACKED")){
+                if(answer.equals("ROLLBACKED")) {
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " rolled back\n");
+
+
+                        if (!timeOutId.contains(party.getId())) {
+                            System.out.println(party.getId());
+                            party.sendToParticipant("YOU HAVE BEEN DISCONECTED DUE TO INACTIVITY");
+
+
+                            participants.remove(party);
+                            System.out.println(participants);
+                            System.out.println("----------------");
+
+                        }
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
             if(timer >= this.timeout){
                 System.out.println("Stopped waiting for rollback due to timeout");
+
                 return false;
             }
         }
@@ -143,6 +159,7 @@ public class Coordinator {
      * This method starts a loop that handles incoming transactions
      */
     public void start(){
+
         String query = "";
         boolean waiting = true;
         while(true){
@@ -154,6 +171,8 @@ public class Coordinator {
                         System.out.println("Got request:\n query:\n" + query);
                         query = query.split("--")[1];
                         System.out.println("query: " + query);
+                        System.out.println(party.getId());
+                        timeOutId.add(party.getId());
                         waiting = false;
                         break;
                     }else if(!query.equals("")){
@@ -163,6 +182,7 @@ public class Coordinator {
                 }
             }
             if(initTransaction(query)){
+                timeOutId.clear();
                 commitTransaction();
             }
             waiting = true;
