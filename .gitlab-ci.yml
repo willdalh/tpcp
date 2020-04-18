@@ -1,16 +1,18 @@
-image: java:latest
+image: maven:3-jdk-10
 
 stages:
-  - test
+  - build
   - deploy
 
-test:
-  stage: test
-  script:
-    - gradle test
+maven-build:
+  stage: build
+  script: "mvn package"
   artifacts:
+    paths:
+      - target/surefire-reports/TEST-*.xml
     reports:
-      junit: build/test-results/test/**/TEST-*.xml
+      junit:
+        - target/surefire-reports/TEST-*.xml
       
       
 pages:
