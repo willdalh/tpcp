@@ -75,6 +75,9 @@ public class Participant {
                 }
 
                 response = this.readFromCoordinator();
+
+
+
                 /* Check if coordinator is initiating transaction */
                 if (this.coordinatorInitiatingTransaction(response)) {
                     String[] responseSplit = response.split("--");
@@ -182,6 +185,7 @@ public class Participant {
         String participantResponse = "";
         String prematureInstructions = "";
         while (!(participantResponse.toUpperCase()).matches("YES|NO")) {
+
             if (participantResponse.length() > 0){
                 System.out.println("CLIENT: Please write either YES or NO");
             }
@@ -206,6 +210,8 @@ public class Participant {
 
         /* Waits for instructions */
         String response = this.readFromCoordinatorWithBlocking();
+
+
         System.out.println("COORDINATOR: " + response);
         return response;
     }
