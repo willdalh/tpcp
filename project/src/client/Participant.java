@@ -231,7 +231,7 @@ public class Participant {
             reportBack = false;
         }
         if (!reportBack){
-            return "shutdown";
+            return "shutdown due to timeout";
         }
         /* Waits for response */
         String response = this.readFromCoordinatorWithBlocking();

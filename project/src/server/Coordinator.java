@@ -71,26 +71,28 @@ public class Coordinator {
 
                         participants.get(i).sendToParticipant("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
 
-                            System.out.println(participants.get(i) + "has been removed");
+                            System.out.println("Client :" + participants.get(i) + " has been removed due to timeout");
                             participants.remove(participants.get(i));
 
                             System.out.println("----------------");
                     }
                 }
 
-
+                /*
                 for (int i = 0; i < participants.size(); i++) {
                     System.out.println(participants.get(i) + " PARTY MESSAGE");
                     participants.get(i).sendToParticipant("TRANSACTION!--" + this.tractionStatement + "--ROLLBACK");
                 }
                 return false;
 
-                /*
-               //messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-               waitForRollbacked(0);
-                return false;
-
                  */
+
+
+               messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+               waitForRollbacked(0);
+               return false;
+
+
             }
         }
         System.out.println("transcation successfully initiated\n");
@@ -119,8 +121,7 @@ public class Coordinator {
                     System.out.println("participant nr. " + party.getId() + " has commited\n");
                 }else if(answer.equals("ROLLBACKED")) {
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
-                    messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-                    waitForRollbacked(1);
+                    waitForRollbacked(0);
                     return false;
                 }
             }
@@ -236,7 +237,7 @@ public class Coordinator {
                         break;
                     }else if(!query.equals("")){
                         System.err.println("Recieved invalid transaction request from Client:\n");
-                        System.out.println("query: " + query + "\n");
+                        System.out.println("query: " + query + "\n" + "invalid");
                     }
                 }
             }
