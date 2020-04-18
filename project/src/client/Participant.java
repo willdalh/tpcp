@@ -25,6 +25,8 @@ public class Participant {
     private String undoLog = "";
     private String redoLog = "";
 
+    private boolean connected;
+
     /**
      * Constructor with custom address and port
      * @param address IP-address of server
@@ -64,7 +66,7 @@ public class Participant {
             this.scanner = new Scanner(System.in);
             String scannerInput;
 
-            boolean connected = true;
+            connected = true;
             while (connected) {
                 scannerInput = this.readFromScanner();
 
@@ -106,7 +108,6 @@ public class Participant {
                     response = this.executeInstructionsAndReport(instructions);
                     System.out.println("COORDINATOR: " + response);
                     System.out.println("CLIENT: You can now request a query with '!request query'");
-
                 }
 
                 if (scannerInput.length() > 0){
@@ -122,10 +123,12 @@ public class Participant {
             }
             reader.close();
             writer.close();
+            socket.close();
         }
         catch(Exception e){
             e.printStackTrace();
         }
+        System.exit(1);
     }
 
     /**
@@ -221,6 +224,7 @@ public class Participant {
      * @param instructions instructions to be executed
      */
     private String executeInstructionsAndReport(String instructions){
+        boolean reportBack = true;
         if (instructions.equals("COMMIT")){
             this.confirmRedoLog();
             this.sendToCoordinator("COMMITTED");
@@ -230,6 +234,13 @@ public class Participant {
             this.confirmUndoLog();
             this.sendToCoordinator("ROLLBACKED");
             System.out.println("CLIENT: Rollbacked");
+        }
+        else if (instructions.equals("SHUTDOWN")){
+            this.connected = false;
+            reportBack = false;
+        }
+        if (!reportBack){
+            return "shutdown";
         }
         /* Waits for response */
         String response = this.readFromCoordinatorWithBlocking();
