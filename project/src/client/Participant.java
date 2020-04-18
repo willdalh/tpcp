@@ -24,7 +24,7 @@ public class Participant {
     private String log = "";
     private String undoLog = "";
     private String redoLog = "";
-    private String pattern = "^[a-zA-Z0-9!]+$";
+    private String pattern = "^[-]+$";
 
     private boolean connected;
 
@@ -131,7 +131,7 @@ public class Participant {
     private void handleRequest(String input){
         if (input.trim().length() > ("!request").length()){
             String request = input.substring(("!request ").length());
-            if (!request.matches(pattern)){
+            if (request.matches(pattern)){
                 System.out.println("Not valid");
             }else {
                 System.out.println(request);
