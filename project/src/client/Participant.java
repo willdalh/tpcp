@@ -68,6 +68,7 @@ public class Participant {
             while (connected) {
                 scannerInput = this.readFromScanner();
 
+
                 response = this.readFromCoordinator();
 
                 /* Check if coordinator is initiating transaction */
@@ -129,7 +130,14 @@ public class Participant {
     private void handleRequest(String input){
         if (input.trim().length() > ("!request").length()){
             String request = input.substring(("!request ").length());
-            this.requestNewTransaction(request);
+            String pattern = "^[-]+$";
+            //This methode prevents the user from typing in !request with char:'-', which would lead to error
+            if (request.matches(pattern)){
+                System.out.println("The input character: '-' is not allowed");
+            }else {
+                System.out.println(request);
+                this.requestNewTransaction(request);
+            }
         }
         else {
             System.out.println("CLIENT: Invalid format for request");

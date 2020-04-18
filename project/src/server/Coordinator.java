@@ -6,12 +6,14 @@ import java.util.Date;
 /**
  * This class contains methods that handles two-phase-commit
  * trasnsactions between participants
+ *
  */
 public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
     private int timeout = 5;
+    //A list containing the client who has responded
     private ArrayList<ClientHandler> respondList = new ArrayList<>();
 
 
@@ -63,7 +65,7 @@ public class Coordinator {
                 System.out.println("Transaction aborted due to timeout\n");
                 System.out.println(respondList + "id");
 
-
+                //A client has not responded, this methode removes this client from the client list hand shuts it down
                 if (respondList.isEmpty()){
                     messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
                 }
@@ -75,24 +77,12 @@ public class Coordinator {
                             System.out.println("Client :" + participants.get(i) + " has been removed due to timeout");
                             participants.remove(participants.get(i));
 
-                            System.out.println("----------------");
                     }
                 }
-
-                /*
-                for (int i = 0; i < participants.size(); i++) {
-                    System.out.println(participants.get(i) + " PARTY MESSAGE");
-                    participants.get(i).sendToParticipant("TRANSACTION!--" + this.tractionStatement + "--ROLLBACK");
-                }
-                return false;
-
-                 */
-
 
                messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
                waitForRollbacked(0);
                return false;
-
 
             }
         }
@@ -157,6 +147,7 @@ public class Coordinator {
      * @param startCount        how many participanhts that have already rollbacked.
      * @return          true if all participants respond with ROLLBACKED. Else false.
      */
+
     private boolean waitForRollbacked(int startCount){
         long start = System.currentTimeMillis();
         long timer = 0L;
@@ -165,26 +156,10 @@ public class Coordinator {
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
                 answer = party.readFromParticipant();
-/*
-                if (timeOutId.isEmpty()){
-                    messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
-                }else if(!timeOutId.contains(party.getId())) {
-                    System.out.println(party.getId());
-                    party.sendToParticipant("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
-
-                    participants.remove(party);
-                    System.out.println(participants);
-                    System.out.println("----------------");
-
-                }
-
- */
 
                 if(answer.equals("ROLLBACKED")) {
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " rolled back\n");
-
-
 
                 }
             }
@@ -197,24 +172,16 @@ public class Coordinator {
             }
         }
 
-        /*Wrong placement
-        for (int i = 0; i < participants.size(); i++) {
-            System.out.println(participants.get(i) + " PARTMESSAGEALL");
-            participants.get(i).sendToParticipant("TRANSACTION--" + this.tractionStatement + "--ROLLBACKED");
-        }
-        return true;
-
-         */
 
         messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACKED");
         return true;
-
 
     }
 
     /**
      * This method starts a loop that handles incoming transactions
      */
+
     public void start(){
 
         String query = "";
