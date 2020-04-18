@@ -1,10 +1,31 @@
-java:
+image: java:latest
+
+stages:
+  - build
+  - execute
+  - test
+  - deploy
+    
+build:
+  stage: build
+  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/javac Server.java
+  artifacts:
+    paths:
+     - Server.*
+     
+execute:
+  stage: execute
+  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/java Server
+  
+test:
   stage: test
   script:
     - gradle test
   artifacts:
     reports:
       junit: build/test-results/test/**/TEST-*.xml
+      
+      
 pages:
   stage: deploy
   script:

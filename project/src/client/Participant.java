@@ -32,28 +32,27 @@ public class Participant {
      * @param address IP-address of server
      * @param port port
      */
-    public Participant(String address, int port){
+    public Participant(String address, int port, InputStream is){
         this.address = address;
         this.port = port;
+        this.scanner = new Scanner(is);
     }
 
     /**
      * Constructor that sets the default address and port
      */
-    public Participant(){
+    public Participant(InputStream is){
         this.address = ADDRESS;
         this.port = PORT;
+        this.scanner = new Scanner(is);
     }
 
     /**
      * Method for starting connection with the server
      */
-    public void startConnection(){
+    public void startConnection(Socket socket){
         System.out.println("CLIENT: Attempting to connect to server");
         try{
-            /* Creating socket connection and objects for communicating with server */
-            Socket socket = new Socket(this.address, this.port);
-
             InputStreamReader isr = new InputStreamReader(socket.getInputStream());
             reader = new BufferedReader(isr);
             writer = new PrintWriter(socket.getOutputStream(), true);
@@ -63,7 +62,6 @@ public class Participant {
             System.out.println("CLIENT: You can now request a query with '!request query'");
             System.out.println("CLIENT: Display the log with '!showlog'");
 
-            this.scanner = new Scanner(System.in);
             String scannerInput;
 
             connected = true;
@@ -107,7 +105,7 @@ public class Participant {
                     /* Executes instructions and reports back either with COMMITTED or ROLLBACKED */
                     response = this.executeInstructionsAndReport(instructions);
                     System.out.println("COORDINATOR: " + response);
-                    System.out.println("CLIENT: You can now request a query with '!request query'");
+
                 }
 
                 if (scannerInput.length() > 0){
@@ -361,5 +359,13 @@ public class Participant {
         stringBuilder.append(this.log + "\n");
         stringBuilder.append("-----------------------------\n");
         return stringBuilder.toString();
+    }
+
+    public String getAddress(){
+        return this.address;
+    }
+
+    public int getPort(){
+        return this.port;
     }
 }
