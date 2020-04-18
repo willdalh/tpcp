@@ -2,7 +2,6 @@ package server;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * This class contains methods that handles two-phase-commit
@@ -13,7 +12,7 @@ public class Coordinator {
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
     private int timeout = 5;
-    private ArrayList<Integer> timeOutId = new ArrayList<>();
+    private ArrayList<ClientHandler> respondList = new ArrayList<>();
 
 
 
@@ -48,10 +47,10 @@ public class Coordinator {
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
                     System.out.println(party.getId());
-                    timeOutId.add(party.getId());
+                    respondList.add(party);
                 }else if(answer.equals("NO")){
                     System.out.println(party.getId());
-                    timeOutId.add(party.getId());
+                    respondList.add(party);
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
 
@@ -62,37 +61,39 @@ public class Coordinator {
             timer = (new Date().getTime() - start) / 1000;
             if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout\n");
-                System.out.println(timeOutId + "id");
+                System.out.println(respondList + "id");
 
-                if (timeOutId.isEmpty()){
+
+                if (respondList.isEmpty()){
                     messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
                 }
                 for (int i = 0; i < participants.size(); i++){
-                    if (!timeOutId.contains(participants.get(i).getId())){
-                        int party = participants.get(i).getId();
-                        System.out.println(party + "PARTY");
+                    if (!respondList.contains(participants.get(i))){
 
                         participants.get(i).sendToParticipant("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
 
-                        participants.remove(party);
-                        System.out.println(participants);
-                        System.out.println("----------------");
+                            System.out.println("Client :" + participants.get(i) + " has been removed due to timeout");
+                            participants.remove(participants.get(i));
+
+                            System.out.println("----------------");
                     }
                 }
 
-
+                /*
                 for (int i = 0; i < participants.size(); i++) {
                     System.out.println(participants.get(i) + " PARTY MESSAGE");
                     participants.get(i).sendToParticipant("TRANSACTION!--" + this.tractionStatement + "--ROLLBACK");
                 }
-                return true;
-
-                /*
-               //messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-               waitForRollbacked(0);
                 return false;
 
                  */
+
+
+               messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
+               waitForRollbacked(0);
+               return false;
+
+
             }
         }
         System.out.println("transcation successfully initiated\n");
@@ -121,8 +122,7 @@ public class Coordinator {
                     System.out.println("participant nr. " + party.getId() + " has commited\n");
                 }else if(answer.equals("ROLLBACKED")) {
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
-                    messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-                    waitForRollbacked(1);
+                    waitForRollbacked(0);
                     return false;
                 }
             }
@@ -193,7 +193,6 @@ public class Coordinator {
 
                 System.out.println("Stopped waiting for rollback due to timeout");
 
-
                 return false;
             }
         }
@@ -226,9 +225,6 @@ public class Coordinator {
             while(waiting){
                 for(ClientHandler party: participants){
                     query = party.readFromParticipant();
-                    if (query.equals("REQUESTING SHUTDOWN")){
-                        break;
-                    }
                     if(!query.equals("") && query.contains("--")){
                         System.out.println("Got request:\n query:\n" + query);
                         query = query.split("--")[1];
@@ -238,12 +234,12 @@ public class Coordinator {
                         break;
                     }else if(!query.equals("")){
                         System.err.println("Recieved invalid transaction request from Client:\n");
-                        System.out.println("query: " + query + "\n");
+                        System.out.println("query: " + query + "\n" + "invalid");
                     }
                 }
             }
             if(initTransaction(query)){
-                timeOutId.clear();
+                respondList.clear();
                 commitTransaction();
             }
             waiting = true;

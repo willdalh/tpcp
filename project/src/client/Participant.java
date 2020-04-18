@@ -68,18 +68,11 @@ public class Participant {
             while (connected) {
                 scannerInput = this.readFromScanner();
 
-                /* Participant wishes to disconnect */
-                if (scannerInput.equals("!shutdown")) {
-                    this.sendToCoordinator("REQUESTING SHUTDOWN");
-                    connected = false;
-                }
-
                 response = this.readFromCoordinator();
-
-
 
                 /* Check if coordinator is initiating transaction */
                 if (this.coordinatorInitiatingTransaction(response)) {
+                    System.out.println("CLIENT: Coordinator has initiated a transaction");
                     String[] responseSplit = response.split("--");
                     System.out.println("COORDINATOR: " + response);
 
@@ -238,7 +231,7 @@ public class Participant {
             reportBack = false;
         }
         if (!reportBack){
-            return "shutdown";
+            return "shutdown due to timeout";
         }
         /* Waits for response */
         String response = this.readFromCoordinatorWithBlocking();
