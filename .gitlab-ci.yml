@@ -9,9 +9,9 @@ stages:
 build:
   stage: build
   script: 
-    - /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/Server.java
     - /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/ClientHandler.java
     - /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/Coordinator.java
+    - /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/Server.java
   artifacts:
     paths:
      - Server.*
