@@ -84,7 +84,6 @@ public class Coordinator {
                waitForRollbacked(0);
                return false;
 
-
             }
         }
         System.out.println("transcation successfully initiated\n");
@@ -162,8 +161,6 @@ public class Coordinator {
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " rolled back\n");
 
-
-
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
@@ -179,14 +176,11 @@ public class Coordinator {
         messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACKED");
         return true;
 
-
     }
 
     /**
      * This method starts a loop that handles incoming transactions
      */
-
-
 
     public void start(){
 

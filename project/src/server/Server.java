@@ -51,11 +51,8 @@ public class Server {
 
                 System.out.println("Stopped waiting for clients");
                 wait = false;
-            } catch (InterruptedException ie) {
+            } catch (InterruptedException | ExecutionException ie) {
                 ie.printStackTrace();
-                wait = false;
-            } catch (ExecutionException ee) {
-                ee.printStackTrace();
                 wait = false;
             } finally {
                 promise.cancel(true);

@@ -24,7 +24,6 @@ public class Participant {
     private String log = "";
     private String undoLog = "";
     private String redoLog = "";
-    private String pattern = "^[-]+$";
 
     private boolean connected;
 
@@ -131,8 +130,10 @@ public class Participant {
     private void handleRequest(String input){
         if (input.trim().length() > ("!request").length()){
             String request = input.substring(("!request ").length());
+            String pattern = "^[-]+$";
+            //This methode prevents the user from typing in !request with char:'-', which would lead to error
             if (request.matches(pattern)){
-                System.out.println("Not valid");
+                System.out.println("The input character: '-' is not allowed");
             }else {
                 System.out.println(request);
                 this.requestNewTransaction(request);
