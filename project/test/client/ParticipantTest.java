@@ -11,8 +11,9 @@ public class ParticipantTest {
     @BeforeEach
     void setUp(){
         participant = new Participant();
-        Socket mockSocket = Mockito.mock(Socket.class);
-        Mockito.when(mockSocket.getPort()).thenReturn(1234336567);
+        mockSocket = Mockito.mock(Socket.class);
+        Mockito.when(mockSocket.getPort()).thenReturn(1234336567).thenReturn(124);
+
     }
 
     @AfterEach
@@ -22,7 +23,9 @@ public class ParticipantTest {
     }
 
     @Test
-    void Test(){
+    void test(){
+        participant.startConnection();
         assertEquals(1234336567, mockSocket.getPort());
+        assertEquals(124, mockSocket.getPort());
     }
 }
