@@ -8,14 +8,14 @@ stages:
     
 build:
   stage: build
-  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/javac Server.java
+  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/javac project/src/server/Server.java
   artifacts:
     paths:
      - Server.*
      
 execute:
   stage: execute
-  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/java Server
+  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/java project/src/server/Server
   
 test:
   stage: test
