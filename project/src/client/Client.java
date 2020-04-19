@@ -10,7 +10,7 @@ public class Client {
     public static void main(String[] args) {
         Participant participant = new Participant(System.in);
         try {
-            Socket socket = new Socket("10.52.207.1", participant.getPort());
+            Socket socket = new Socket(participant.getAddress(), participant.getPort());
             participant.startConnection(socket);
         }
         catch (IOException ioe){

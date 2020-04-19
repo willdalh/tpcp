@@ -98,7 +98,7 @@ public class Participant {
 
                     /* Executes instructions and reports back either with COMMITTED or ROLLBACKED */
                     response = this.executeInstructionsAndReport(instructions);
-                    System.out.println("COORDINATOR: " + response);
+                    System.out.println(response);
 
                 }
 
@@ -239,10 +239,10 @@ public class Participant {
             reportBack = false;
         }
         if (!reportBack){
-            return "shutdown due to timeout";
+            return "CLIENT: Shutdown due to timeout";
         }
         /* Waits for response */
-        String response = this.readFromCoordinatorWithBlocking();
+        String response = "COORDINATOR: " + this.readFromCoordinatorWithBlocking();
         return response;
     }
 
