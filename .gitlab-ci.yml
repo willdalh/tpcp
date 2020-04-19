@@ -5,14 +5,13 @@ stages:
   - deploy
 
 
-java:
+maven_build:
   stage: test
   script:
-    - mvn verify
-  artifacts:
-    reports:
-      junit:
-        - target/surefire-reports/TEST-*.xml
+    - echo "building my amazing repo..."
+    - mvn test
+    - 'curl -H "Content-Type: multipart/form-data" -u $jira_user:$jira_password -F "file=@target/surefire-reports/TEST-com.xpand.java.CalcTest.xml" "$jira_server_url/rest/raven/1.0/import/execution/junit?projectKey=CALC"'
+    - echo "done"
       
       
 pages:
