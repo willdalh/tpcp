@@ -8,6 +8,11 @@ java:
   stage: test
   script:
     - gradle test
+  artifacts:
+    paths:
+      - build
+    reports:
+      junit: project/test/results/results.xml
       
       
 pages:
