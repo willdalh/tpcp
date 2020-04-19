@@ -12,7 +12,7 @@ java:
     paths:
       - build
     reports:
-      junit: build/test-results/test/**/TEST-*.xml
+      junit: project/test/results/results.xml
       
       
 pages:
