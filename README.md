@@ -2,13 +2,13 @@
 
 ## Innholdsfortegnelse
 
-1. [Installasjonsinstruksjoner](##Installasjonsinstruksjoner)
-2. [Innledning/Introduksjon](##Innledning/Introduksjon)
-3. [Beskrivelse](##Beskrivelse)
-4. [Diskusjon](##Diskusjon)
-5. [Gruppemedlemmer](##Gruppemedlemmer)
+1. [Installasjonsinstruksjoner](#instruksjoner)
+2. [Innledning](#innledning)
+3. [Beskrivelse](#beskrivelse)
+4. [Diskusjon](#diskusjon)
+5. [Gruppemedlemmer](#gruppemedlemmer)
 
-## Installasjonsinstruksjoner
+## Installasjonsinstruksjoner <a name="instruksjoner"></a>
 
 ```
 1: Clone the project
@@ -21,10 +21,9 @@
 
 Lenke til API her
 
-## Innledning/Introduksjon
+## <a name="innledning"></a> Innledning
 
 Dette avsnittet kan også være rett under tittelen
-
 
 Vi har programert en two-phase commit protokoll. Denne protokollen sikrer atomiske transaktsjoner.
 
@@ -35,8 +34,7 @@ Fase to:
 Om alle klientene stemte ja i forrige fase blir endringen lagret. Om en klient stemte nei blir tansaksjonen kanselert.
 Kordinatoren informerer da alle klientene og sørger for at ingen endringer blir lagret.
 
-
-## Beskrivelse
+## <a name="beskrivelse"></a> Beskrivelse
 
 ### Implementert funksjonalitet
 
@@ -46,16 +44,19 @@ Kordinatoren informerer da alle klientene og sørger for at ingen endringer blir
 
 ### Hvordan teste løsningen
 
-## Diskusjon
+Instruksjonene som presenteres i dette avsnittet forutsetter at du har
+
+## <a name="diskusjon"></a> Diskusjon
 
 ### Fremtidig arbeid
 
 #### Mangler
 
 #### Mulige forbedringer
-	-En GUI interface
 
-## Gruppemedlemmer
+    -En GUI interface
+
+## <a name="gruppemedlemmer"></a> Gruppemedlemmer
 
 Magnus Baugerud  
  William Dalheim  
