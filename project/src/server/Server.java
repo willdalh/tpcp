@@ -38,7 +38,7 @@ public class Server {
             };
             Future<Object> promise = executor.submit(waiter);
             try {
-                Object res = promise.get(100, TimeUnit.SECONDS);
+                Object res = promise.get(10, TimeUnit.SECONDS);
                 participants.add(new ClientHandler((Socket)res, id));
                 participants.get(participants.size() - 1).sendToParticipant("You are connected with id " + id);
                 System.out.println("Client connected.\nClient id: " + id + "\nNumber of clients: " + participants.size() + "\n");

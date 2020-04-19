@@ -357,7 +357,7 @@ public class Participant {
     private String getLog(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("-------------LOG-------------\n");
-        stringBuilder.append(this.log + "\n");
+        stringBuilder.append(this.log);
         stringBuilder.append("-----------------------------\n");
         return stringBuilder.toString();
     }
