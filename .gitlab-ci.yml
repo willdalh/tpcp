@@ -10,7 +10,7 @@ java:
     - gradle test
   artifacts:
     reports:
-      junit: ./**/build/test-results/test/**/TEST-*.xml
+      junit: project/test/results/**/TEST-*.xml
       
       
 pages:
