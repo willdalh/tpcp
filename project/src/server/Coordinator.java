@@ -12,7 +12,7 @@ public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
-    private int timeout = 5;
+    private int timeout = 8;
     //A list containing the client who has responded
     private ArrayList<ClientHandler> respondList = new ArrayList<>();
 
@@ -34,6 +34,7 @@ public class Coordinator {
      * @return          true if all participants are ready to commit. else false
      */
     private boolean initTransaction(String query){
+        respondList.clear();
         this.tractionStatement = query;
         System.out.println("Initiating transaction:\n" + this.tractionStatement + "\n");
         messageAll("NEW TRANSACTION--" + this.tractionStatement + "--READY TO COMMIT?");
@@ -68,6 +69,8 @@ public class Coordinator {
                 //A client has not responded, this methode removes this client from the client list hand shuts it down
                 if (respondList.isEmpty()){
                     messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
+                    participants.clear();
+                    break;
                 }
                 for (int i = 0; i < participants.size(); i++){
                     if (!respondList.contains(participants.get(i))){
@@ -110,12 +113,22 @@ public class Coordinator {
                 if(answer.equals("COMMITTED")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " has commited\n");
-                }else if(answer.equals("ROLLBACKED")) {
+
+                }
+                /*
+                else if(answer.equals("ROLLBACKED")) {
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     waitForRollbacked(0);
+
                     return false;
                 }
+
+                 */
+
+
             }
+
+            /*
             timer = (new Date().getTime() - start) / 1000;
             if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout");
@@ -123,6 +136,9 @@ public class Coordinator {
                 waitForRollbacked(0);
                 return false;
             }
+
+             */
+
         }
         System.out.println("Transaction commited\n");
         messageAll("TRANSACTION--" + this.tractionStatement + "--SUCCESS");
