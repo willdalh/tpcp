@@ -29,18 +29,22 @@ Vi har programmert en Two-Phase Commit Protocol (TPCP). Protokollen brukes i et 
 
 ## <a name="beskrivelse"></a> Beskrivelse
 
-Fase 1:
-I den første fasen forberedes alle transaksjonene. Alle klientene må også svare ja/nei om de har intruffet et problem.
+Som navnet tilsier, så deles Two-Phase Commit Protocol opp i to faser.
 
-Fase 2:
+### Fase 1
+
+I den første fasen mottar alle deltakerne melding fra koordinator om at en transaksjon er satt igang. Alle klientene skal svare ja eller nei om de har intruffet et problem. Fase 1 består da av to meldinger, en hver vei.
+
+### Fase 2
+
 Om alle klientene stemte ja i forrige fase blir endringen lagret. Om en klient stemte nei blir tansaksjonen kanselert.
-Kordinatoren informerer da alle klientene og sørger for at ingen endringer blir lagret.
+Kordinatoren informerer da alle klientene og sørger for at ingen endringer blir lagret. I fase 2 sendes det altså instruksjoner fra koordinator til deltakerne. Deltakerne svarer så med en kvittering på at instruksjonene er fullført.
+
+I tillegg til de grunnleggende meldingene som sendes mellom koordinator og deltakerne har vi lagt til noen flere som bygger på protokollen. I figuren under ser man hvordan meldingsflyten foregår gjennom en vellykket transaksjon. Figuren tar utgangspunkt i synspunktet fra en individuell deltaker.
 
 <img src="documentation/figures/tpcp.png" alt="Figur som viser flyten i en vellykket transaksjon" height="550">
 
 ### Implementert funksjonalitet
-
-### Teknologi- og arkitektur-/designvalg
 
 ### Eksempler med bruk av løsningen
 
@@ -84,6 +88,17 @@ En transaksjon settes igang av en av deltakerne. Dette gjøres med kommandoen `!
 Når alle klientene har svart ja, begynner fase to. Koordinator vil da sende ut en ny melding hvor den instruerer deltakerne til å lagre oppføringen. Klientene sender tilbake kvittering om at instruksjonene er utført. Fase to skjer automatisk og krever ingen handlinger fra brukeren.
 
 ## <a name="diskusjon"></a> Diskusjon
+
+### Teknologi- og arkitektur-/designvalg
+
+Vi kan skrive om
+
+1. TCP
+2. Arbeidsoppgavene hver klasse har
+3. At brukeren ikke kan skrive "--" i en request
+4. Hvorfor vi valgte java
+5. Vår tolkning av protokollen ut fra wikipedia siden
+6. Testbiblioteker og andre biblioteker vi brukte
 
 ### Fremtidig arbeid
 
