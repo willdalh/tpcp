@@ -9,6 +9,8 @@ java:
   script:
     - gradle test
   artifacts:
+    paths:
+      - public
     reports:
       junit: project/test/results/test/**/TEST-*.xml
       
