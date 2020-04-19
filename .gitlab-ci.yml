@@ -11,7 +11,7 @@ java:
     - gradle test
   artifacts:
     reports:
-      junit: build/test-results/test/**/TEST-*.xml
+      junit: project/test/results/results.xml
       
       
 pages:
