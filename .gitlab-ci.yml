@@ -10,9 +10,9 @@ java:
     - gradle test
   artifacts:
     paths:
-      - public
+      - build
     reports:
-      junit: project/test/results/test/**/TEST-*.xml
+      junit: build/test-results/test/**/TEST-*.xml
       
       
 pages:
