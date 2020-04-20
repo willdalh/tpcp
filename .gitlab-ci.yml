@@ -3,12 +3,13 @@ image: maven:alpine
 stages:
   - test
   - deploy
-  
+
 test:
   stage: test
   script: 
     - cd project
     - mvn test
+
       
       
 pages:
