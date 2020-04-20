@@ -5,9 +5,9 @@ stages:
   - deploy
 
 
+  - cd project
 java:
   stage: test
-  cd project
   script:
     - mvn verify
   artifacts:
