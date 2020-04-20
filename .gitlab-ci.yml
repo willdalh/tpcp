@@ -3,17 +3,12 @@ image: maven:alpine
 stages:
   - test
   - deploy
-
-
-java:
+  
+test:
   stage: test
-  script:
+  script: 
     - cd project
     - mvn test
-  artifacts:
-    reports:
-      junit:
-        - project/test/results/results.xml
       
       
 pages:
@@ -27,3 +22,4 @@ pages:
     - public
   only:
   - master
+
