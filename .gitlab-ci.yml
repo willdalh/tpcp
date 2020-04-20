@@ -13,7 +13,7 @@ java:
   artifacts:
     reports:
       junit:
-        - project/test/results/results.xml
+        - project/test/results/test.xml
       
       
 pages:

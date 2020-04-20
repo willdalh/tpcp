@@ -46,6 +46,7 @@
                 <version>2.22.1</version>
                 <configuration>
                     <outputDirectory>project/test/results</outputDirectory>
+                    <outputName>test</outputName>
                 </configuration>
             </plugin>
         </plugins>
