@@ -2,10 +2,11 @@ package server;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.concurrent.*;
 
 import server.*;
+
 
 /**
  * This class handles connection requests from clients and creates
@@ -14,6 +15,8 @@ import server.*;
  * @author magnubau
  */
 public class Server {
+
+
     /**
      *This main method goes in loops waiting for new connections to
      * handle

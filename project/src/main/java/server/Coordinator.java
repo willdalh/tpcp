@@ -1,7 +1,5 @@
 package server;
 
-import client.Client;
-
 import java.util.ArrayList;
 import java.util.Date;
 
