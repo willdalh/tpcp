@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: client.ParticipantTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.863 s <<< FAILURE! - in client.ParticipantTest
-test  Time elapsed: 0.858 s  <<< ERROR!
-java.lang.NullPointerException
-	at client.ParticipantTest.test(ParticipantTest.java:50)
-
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.66 s - in client.ParticipantTest
