@@ -1,6 +1,5 @@
-package test.java.client;
+package client;
 
-import client.Participant;
 import org.mockito.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,7 +49,7 @@ public class ParticipantTest {
         scannerInputStream.transferTo(scannerOutputStream);
         PrintWriter printWriter = new PrintWriter(scannerOutputStream);
         printWriter.write("!showlog");
-        Assertions.assertEquals(1234336567, mockSocket.getPort());
-        Assertions.assertEquals(124, mockSocket.getPort());
+        assertEquals(1234336567, mockSocket.getPort());
+        assertEquals(124, mockSocket.getPort());
     }
 }
