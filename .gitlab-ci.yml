@@ -8,7 +8,9 @@ stages:
 java:
   stage: test
   script:
+    - cd project
     - mvn verify
+    - mvn test
   artifacts:
     reports:
       junit:
