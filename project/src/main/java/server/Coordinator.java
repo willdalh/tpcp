@@ -164,6 +164,7 @@ public class Coordinator {
      * This method starts a loop that handles incoming transactions
      */
     public void start(){
+        messageAll("All participants connected");
         String query = "";
         boolean waiting = true;
         while(true){
