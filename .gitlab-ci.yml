@@ -9,8 +9,7 @@ java:
   stage: test
   script:
     - cd project
-    - mvn verify
-    - mvn test
+    - mvn clean test
   artifacts:
     reports:
       junit:

@@ -45,7 +45,7 @@ public class ParticipantTest {
 
     @Test
     void test() throws IOException{
-        participant.startConnection(mockSocket);
+        //participant.startConnection(mockSocket);
         //scannerInputStream.transferTo(scannerOutputStream);
         PrintWriter printWriter = new PrintWriter(scannerOutputStream);
         printWriter.write("!showlog");
