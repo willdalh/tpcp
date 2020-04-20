@@ -13,7 +13,7 @@ public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
-    private int timeout = 20;
+    private int timeout = 5;
     private ArrayList<ClientHandler> respondList = new ArrayList<>(); //A list containing the clients who have responded
 
 
@@ -68,7 +68,6 @@ public class Coordinator {
                 if (respondList.isEmpty()){
                     messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
                     participants.clear();
-                    break;
                 }
                 for (int i = 0; i < participants.size(); i++){
                     if (!respondList.contains(participants.get(i))){
@@ -167,9 +166,14 @@ public class Coordinator {
         messageAll("All participants connected");
         String query = "";
         boolean waiting = true;
-        while(true){
+        boolean run = true;
+        while(run){
             System.out.println("Waiting for transaction request\n");
             while(waiting){
+                if(participants.size() == 0){
+                    run = false;
+                    waiting = false;
+                }
                 for(ClientHandler party: participants){
                     query = party.readFromParticipant();
                     /*Coordinator recieves valid request*/
@@ -192,5 +196,6 @@ public class Coordinator {
             }
             waiting = true;
         }
+        System.out.println("Shutting down\n");
     }
 }

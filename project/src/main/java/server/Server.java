@@ -44,7 +44,7 @@ public class Server {
                 System.out.println("Client connected.\nClient id: " + id + "\nNumber of clients: " + participants.size() + "\n");
 
                 /* ---------------- FOR DEBUG ------------- */
-                    if (participants.size() == 3) wait = false;
+                    if (participants.size() == 2) wait = false;
                 /* ---------------------------------------- */
 
             } catch (TimeoutException toe) {
@@ -64,7 +64,7 @@ public class Server {
         }
         Coordinator coordinator = new Coordinator(participants);
         coordinator.start();
-        //server.close();
+        server.close();
 
     }
 }
