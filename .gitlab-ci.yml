@@ -1,16 +1,9 @@
 image: maven:alpine
 
 stages:
-  - maven
   - test
   - deploy
   
-maven:
-  stage: maven
-  script:
-    - cd project
-    - mvn clean install
-
 test:
   stage: test
   script: 
