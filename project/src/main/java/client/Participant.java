@@ -162,13 +162,6 @@ public class Participant {
         return "";
     }
 
-    /**
-     * Waits until a string appears in the scanner buffer
-     * @return input from user
-     */
-    private String readFromScannerWithBlocking(){
-        return scanner.nextLine();
-    }
 
     /**
      * Requests a new transaction to the coordinator
