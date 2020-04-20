@@ -7,7 +7,9 @@ stages:
   
 maven:
   stage: maven
-  script: mvn clean install
+  script:
+    - cd project
+    - mvn clean install
 
 test:
   stage: test
