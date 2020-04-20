@@ -59,8 +59,9 @@ public class Server {
             }
             id++;
         }
-        System.out.println("Donn Morison");
-        System.out.println(participants + " Are connected");
+        for(ClientHandler i: participants){
+            System.out.println(i + " is connected,");
+        }
         Coordinator coordinator = new Coordinator(participants);
         coordinator.start();
         //server.close();

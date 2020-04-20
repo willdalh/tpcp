@@ -44,7 +44,6 @@ public class ClientHandler{
     public boolean sendToParticipant(String message) {
         try {
             writer.println(message);
-            System.out.println("Message is deliverd");
             return true;
         } catch (Exception e) {
             e.printStackTrace();

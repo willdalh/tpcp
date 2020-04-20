@@ -3,6 +3,7 @@ package server;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 /**
  * This class contains methods that handles two-phase-commit
  * trasnsactions between participants
@@ -12,10 +13,8 @@ public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
-    private int timeout = 8;
-    //A list containing the client who has responded
-    private ArrayList<ClientHandler> respondList = new ArrayList<>();
-
+    private int timeout = 20;
+    private ArrayList<ClientHandler> respondList = new ArrayList<>(); //A list containing the clients who have responded
 
 
     /**
@@ -27,6 +26,7 @@ public class Coordinator {
         this.participants = participants;
     }
 
+
     /**
      * This method checks if all participants areready to commit a new transaction
      *
@@ -37,36 +37,34 @@ public class Coordinator {
         respondList.clear();
         this.tractionStatement = query;
         System.out.println("Initiating transaction:\n" + this.tractionStatement + "\n");
+        /*Ask all participants if they are ready to commit*/
         messageAll("NEW TRANSACTION--" + this.tractionStatement + "--READY TO COMMIT?");
-
         long start = System.currentTimeMillis();
         long timer = 0L;
         int resCount = 0;
         String answer = "";
+        /*Wait for all participants to respond*/
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
                 answer = party.readFromParticipant();
                 if(answer.equals("YES")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " is ready to commit\n");
-                    System.out.println(party.getId());
                     respondList.add(party);
+                /*Rollback if a participants answers NO*/
                 }else if(answer.equals("NO")){
-                    System.out.println(party.getId());
                     respondList.add(party);
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-
                     waitForRollbacked(0);
                     return false;
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
+            /*Rollback if participants take too long to respond*/
             if(timer >= this.timeout){
                 System.out.println("Transaction aborted due to timeout\n");
-                System.out.println(respondList + "id");
-
-                //A client has not responded, this methode removes this client from the client list hand shuts it down
+                /*Participants that do not respond are removed and shut down*/
                 if (respondList.isEmpty()){
                     messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
                     participants.clear();
@@ -74,24 +72,20 @@ public class Coordinator {
                 }
                 for (int i = 0; i < participants.size(); i++){
                     if (!respondList.contains(participants.get(i))){
-
                         participants.get(i).sendToParticipant("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
-
-                            System.out.println("Client :" + participants.get(i) + " has been removed due to timeout");
-                            participants.remove(participants.get(i));
-
+                        System.out.println("Client :" + participants.get(i) + " has been removed due to timeout\n");
+                        participants.remove(participants.get(i));
                     }
                 }
-
                messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
                waitForRollbacked(0);
                return false;
-
             }
         }
         System.out.println("transcation successfully initiated\n");
         return true;
     }
+
 
     /**
      * This method instructs all participants to commit, and checks if they
@@ -99,51 +93,28 @@ public class Coordinator {
      * @return      true if all participants commit successfully. else false
      */
     private boolean commitTransaction(){
-
-        System.out.println("Commiting transaction");
+        System.out.println("Commiting transaction\n");
+        /*Ask all participants to commit*/
         messageAll("TRANSACTION--" + this.tractionStatement + "--COMMIT");
-
         long start = System.currentTimeMillis();
         long timer = 0L;
         int resCount = 0;
         String answer = "";
+        /*Wait for all participants to respond*/
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
                 answer = party.readFromParticipant();
                 if(answer.equals("COMMITTED")){
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " has commited\n");
-
                 }
-                /*
-                else if(answer.equals("ROLLBACKED")) {
-                    System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
-                    waitForRollbacked(0);
-
-                    return false;
-                }
-
-                 */
-
-
             }
-
-            /*
-            timer = (new Date().getTime() - start) / 1000;
-            if(timer >= this.timeout){
-                System.out.println("Transaction aborted due to timeout");
-                messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-                waitForRollbacked(0);
-                return false;
-            }
-
-             */
-
         }
         System.out.println("Transaction commited\n");
         messageAll("TRANSACTION--" + this.tractionStatement + "--SUCCESS");
         return true;
     }
+
 
     /**
      * This method sends a message to all participants
@@ -163,64 +134,57 @@ public class Coordinator {
      * @param startCount        how many participanhts that have already rollbacked.
      * @return          true if all participants respond with ROLLBACKED. Else false.
      */
-
     private boolean waitForRollbacked(int startCount){
         long start = System.currentTimeMillis();
         long timer = 0L;
         int resCount = startCount;
         String answer = "";
+        /*Wait for all participants to respond*/
         while(resCount < participants.size()){
             for(ClientHandler party: participants){
                 answer = party.readFromParticipant();
-
                 if(answer.equals("ROLLBACKED")) {
                     resCount++;
                     System.out.println("participant nr. " + party.getId() + " rolled back\n");
-
                 }
             }
             timer = (new Date().getTime() - start) / 1000;
+            /*Stop waiting if participants take too long to respond*/
             if(timer >= this.timeout){
-
-                System.out.println("Stopped waiting for rollback due to timeout");
-
+                System.out.println("Stopped waiting for rollback due to timeout\n");
                 return false;
             }
         }
-
-
         messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACKED");
         return true;
-
     }
+
 
     /**
      * This method starts a loop that handles incoming transactions
      */
-
     public void start(){
-
         String query = "";
         boolean waiting = true;
         while(true){
-           
             System.out.println("Waiting for transaction request\n");
             while(waiting){
                 for(ClientHandler party: participants){
                     query = party.readFromParticipant();
+                    /*Coordinator recieves valid request*/
                     if(!query.equals("") && query.contains("--")){
-                        System.out.println("Got request:\n query:\n" + query);
                         query = query.split("--")[1];
-                        System.out.println("query: " + query);
-
+                        System.out.println("Got request: " + query);
                         waiting = false;
                         break;
+                    /*Coordinator recieves invalid request*/
                     }else if(!query.equals("")){
                         System.err.println("Recieved invalid transaction request from Client:\n");
-                        System.out.println("query: " + query + "\n" + "invalid");
+                        System.out.println("query: " + query + "\n");
                     }
                 }
             }
+            /*Executes a transaction*/
             if(initTransaction(query)){
                 respondList.clear();
                 commitTransaction();
@@ -228,5 +192,4 @@ public class Coordinator {
             waiting = true;
         }
     }
-
 }
