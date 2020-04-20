@@ -18,7 +18,7 @@
     <property name="user.country" value="NO"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.8.0_191\jre\bin"/>
-    <property name="sun.java.command" value="C:\Users\willd\AppData\Local\Temp\surefire6814828334062179686\surefirebooter492108503833726452.jar C:\Users\willd\AppData\Local\Temp\surefire6814828334062179686 2020-04-20T08-47-19_740-jvmRun1 surefire7362079577646615295tmp surefire_05579423064595364009tmp"/>
+    <property name="sun.java.command" value="C:\Users\willd\AppData\Local\Temp\surefire4181673576169992683\surefirebooter5080201527535727904.jar C:\Users\willd\AppData\Local\Temp\surefire4181673576169992683 2020-04-20T08-52-55_834-jvmRun1 surefire2066138987672438542tmp surefire_07540915904006190842tmp"/>
     <property name="surefire.test.class.path" value="C:\Users\willd\Documents\Skole\U4\Datakommunikasjon og nettverksprogrammering\Nettverksprogrammering\tpcp\project\target\test-classes;C:\Users\willd\Documents\Skole\U4\Datakommunikasjon og nettverksprogrammering\Nettverksprogrammering\tpcp\project\target\classes;C:\Users\willd\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.4.2\junit-jupiter-api-5.4.2.jar;C:\Users\willd\.m2\repository\org\apiguardian\apiguardian-api\1.0.0\apiguardian-api-1.0.0.jar;C:\Users\willd\.m2\repository\org\opentest4j\opentest4j\1.1.1\opentest4j-1.1.1.jar;C:\Users\willd\.m2\repository\org\junit\platform\junit-platform-commons\1.4.2\junit-platform-commons-1.4.2.jar;C:\Users\willd\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.4.2\junit-jupiter-engine-5.4.2.jar;C:\Users\willd\.m2\repository\org\junit\platform\junit-platform-engine\1.4.2\junit-platform-engine-1.4.2.jar;C:\Users\willd\.m2\repository\org\mockito\mockito-core\3.3.3\mockito-core-3.3.3.jar;C:\Users\willd\.m2\repository\net\bytebuddy\byte-buddy\1.10.5\byte-buddy-1.10.5.jar;C:\Users\willd\.m2\repository\net\bytebuddy\byte-buddy-agent\1.10.5\byte-buddy-agent-1.10.5.jar;C:\Users\willd\.m2\repository\org\objenesis\objenesis\2.6\objenesis-2.6.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\willd"/>
@@ -31,7 +31,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="C:\Users\willd\AppData\Local\Temp\surefire6814828334062179686\surefirebooter492108503833726452.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\willd\AppData\Local\Temp\surefire4181673576169992683\surefirebooter5080201527535727904.jar"/>
     <property name="sun.boot.class.path" value="C:\Program Files\Java\jdk1.8.0_191\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\rt.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_191\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_191\jre\classes"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -63,5 +63,5 @@
   <testcase name="getId" classname="server.ClentHandlerTest" time="0"/>
   <testcase name="toStringTest" classname="server.ClentHandlerTest" time="0"/>
   <testcase name="readFromParticipant" classname="server.ClentHandlerTest" time="0"/>
-  <testcase name="sendToParticipant" classname="server.ClentHandlerTest" time="0.001"/>
+  <testcase name="sendToParticipant" classname="server.ClentHandlerTest" time="0"/>
 </testsuite>
