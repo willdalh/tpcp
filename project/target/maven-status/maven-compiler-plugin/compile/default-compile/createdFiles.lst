@@ -1,9 +1,0 @@
-client\Client.class
-client\Client3.class
-client\Participant.class
-utils\Utils.class
-server\ClientHandler.class
-server\Server$1.class
-server\Coordinator.class
-server\Server.class
-client\Client2.class
