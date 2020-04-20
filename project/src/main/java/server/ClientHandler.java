@@ -10,7 +10,7 @@ public class ClientHandler{
     private int id;
     private BufferedReader reader;
     private PrintWriter writer;
-    InputStreamReader readConnection;
+    private InputStreamReader readConnection;
 
 
     /**

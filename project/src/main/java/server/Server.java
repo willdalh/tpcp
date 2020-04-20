@@ -44,7 +44,7 @@ public class Server {
                 Object res = promise.get(10, TimeUnit.SECONDS);
                 participants.add(new ClientHandler((Socket)res, id));
                 participants.get(participants.size() - 1).sendToParticipant("You are connected with id " + id);
-                System.out.println("Client connected.\nClient id: " + id + "\nNumber of clients: " + participants.size() + "\n");
+                System.out.println("Client connected with id: " + id + "\nNumber of clients: " + participants.size() + "\n");
 
                 /* ---------------- FOR DEBUG ------------- */
                     if (participants.size() == 2) wait = false;

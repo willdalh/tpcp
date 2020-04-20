@@ -56,7 +56,7 @@ public class Coordinator {
                     respondList.add(party);
                     System.out.println("Transaction aborted by participant nr. " + party.getId() + "\n");
                     messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-                    waitForRollbacked(0);
+                    waitForRollbacked();
                     return false;
                 }
             }
@@ -81,7 +81,7 @@ public class Coordinator {
                     }
                 }
                messageAll("TRANSACTION--" + this.tractionStatement + "--ROLLBACK");
-               waitForRollbacked(0);
+               waitForRollbacked();
                return false;
             }
         }
@@ -134,13 +134,12 @@ public class Coordinator {
 
     /**
      * This method waits for all participants to rollback.
-     * @param startCount        how many participanhts that have already rollbacked.
      * @return          true if all participants respond with ROLLBACKED. Else false.
      */
-    private boolean waitForRollbacked(int startCount){
+    private boolean waitForRollbacked(){
         long start = System.currentTimeMillis();
         long timer = 0L;
-        int resCount = startCount;
+        int resCount = 0;
         String answer = "";
         /*Wait for all participants to respond*/
         while(resCount < participants.size()){

@@ -58,6 +58,7 @@ public class Participant {
 
             String response = this.readFromCoordinatorWithBlocking();
             System.out.println("COORDINATOR: " + response);
+            System.out.println("CLIENT: Please wait for further instructions");
             response = this.readFromCoordinatorWithBlocking();
             System.out.println("COORDINATOR: " + response);
             System.out.println("CLIENT: You can now request a query with '!request query'");
@@ -121,7 +122,6 @@ public class Participant {
         catch(Exception e){
             e.printStackTrace();
         }
-        System.exit(1);
     }
 
     /**
@@ -131,12 +131,11 @@ public class Participant {
     private void handleRequest(String input){
         if (input.trim().length() > ("!request").length()){
             String request = input.substring(("!request ").length());
-            String pattern = "^[-]+$";
-            //This methode prevents the user from typing in !request with char:'-', which would lead to error
-            if (request.matches(pattern)){
-                System.out.println("The input character: '-' is not allowed");
+
+            /* Prevents the user from requesting a query with the string '--' included */
+            if (request.contains("--")){
+                System.out.println("CLIENT: The input character: '--' is not allowed");
             }else {
-                System.out.println(request);
                 this.requestNewTransaction(request);
             }
         }
@@ -161,13 +160,6 @@ public class Participant {
         return "";
     }
 
-    /**
-     * Waits until a string appears in the scanner buffer
-     * @return input from user
-     */
-    private String readFromScannerWithBlocking(){
-        return scanner.nextLine();
-    }
 
     /**
      * Requests a new transaction to the coordinator
