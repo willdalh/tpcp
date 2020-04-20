@@ -1,5 +1,7 @@
 package server;
 
+import client.Client;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -67,12 +69,16 @@ public class Coordinator {
                 /*Participants that do not respond are removed and shut down*/
                 if (respondList.isEmpty()){
                     messageAll("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
+                    for(ClientHandler party: participants){
+                        party.shutdown();
+                    }
                     participants.clear();
                 }
                 for (int i = 0; i < participants.size(); i++){
                     if (!respondList.contains(participants.get(i))){
                         participants.get(i).sendToParticipant("TRANSACTION--" + this.tractionStatement + "--SHUTDOWN");
-                        System.out.println("Client :" + participants.get(i) + " has been removed due to timeout\n");
+                        System.out.println(participants.get(i) + " has been removed due to timeout\n");
+                        participants.get(i).shutdown();
                         participants.remove(participants.get(i));
                     }
                 }
@@ -190,9 +196,11 @@ public class Coordinator {
                 }
             }
             /*Executes a transaction*/
-            if(initTransaction(query)){
-                respondList.clear();
-                commitTransaction();
+            if (run){
+                if(initTransaction(query)){
+                    respondList.clear();
+                    commitTransaction();
+                }
             }
             waiting = true;
         }

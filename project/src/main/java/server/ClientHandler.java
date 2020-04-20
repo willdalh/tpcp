@@ -12,6 +12,7 @@ public class ClientHandler{
     private PrintWriter writer;
     InputStreamReader readConnection;
 
+
     /**
      * Takes in a socket connection and a client id as argument
      * @param connection of type socket
@@ -36,6 +37,7 @@ public class ClientHandler{
         return id;
     }
 
+
     /**
      * Receves a message from cordinator and sends it to the participant
      * @param message is the instruction to the participant
@@ -51,12 +53,12 @@ public class ClientHandler{
         }
     }
 
+
     /**
      * reads the response from the participant and return it to the coordinator
      * @return returne the response
      * Uses the methode Buffereader to read the response from the participant. Then the response is returned to the coordinator
      */
-
     public String readFromParticipant(){
         String line = "";
         try {
@@ -67,6 +69,20 @@ public class ClientHandler{
             ioe.printStackTrace();
         }
         return line;
+    }
+
+
+    /**
+     * This method closes the connection, writer and reader
+     */
+    public void shutdown(){
+        try{
+            connection.close();
+            reader.close();
+            writer.close();
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+        }
     }
 
     public String toString(){
@@ -80,4 +96,5 @@ public class ClientHandler{
     public void setWriter(PrintWriter writer) {
         this.writer = writer;
     }
+
 }

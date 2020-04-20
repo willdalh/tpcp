@@ -64,7 +64,9 @@ public class Server {
         }
         Coordinator coordinator = new Coordinator(participants);
         coordinator.start();
+        for(ClientHandler party: participants){
+            party.shutdown();
+        }
         server.close();
-
     }
 }
