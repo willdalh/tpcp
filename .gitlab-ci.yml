@@ -1,19 +1,19 @@
 image: maven:alpine
 
 stages:
+  - maven
   - test
   - deploy
+  
+maven:
+  stage: maven
+  script: mvn clean install
 
-
-java:
+test:
   stage: test
-  script:
+  script: 
     - cd project
-    - mvn verify
-  artifacts:
-    reports:
-      junit:
-        - project/target/surefire-reports/TEST*.xml
+    - mvn test
       
       
 pages:
@@ -27,3 +27,4 @@ pages:
     - public
   only:
   - master
+
