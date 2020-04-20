@@ -8,8 +8,7 @@ stages:
   - cd project
 java:
   stage: test
-  script:
-    - mvn verify
+  script: "mvn package"
   artifacts:
     reports:
       junit:
