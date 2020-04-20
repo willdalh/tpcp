@@ -59,6 +59,8 @@ public class Participant {
 
             String response = this.readFromCoordinatorWithBlocking();
             System.out.println("COORDINATOR: " + response);
+            response = this.readFromCoordinatorWithBlocking();
+            System.out.println("COORDINATOR: " + response);
             System.out.println("CLIENT: You can now request a query with '!request query'");
             System.out.println("CLIENT: Display the log with '!showlog'");
 
@@ -310,6 +312,10 @@ public class Participant {
         String response = "";
         try {
             response = this.reader.readLine();
+            /* Clears scanner input */
+            while (System.in.available() > 0){
+                this.readFromScanner();
+            }
         }
         catch (IOException ioe){
             ioe.printStackTrace();

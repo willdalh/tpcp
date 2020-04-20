@@ -199,7 +199,7 @@ public class Coordinator {
      */
 
     public void start(){
-
+        messageAll("All participants connected");
         String query = "";
         boolean waiting = true;
         while(true){
