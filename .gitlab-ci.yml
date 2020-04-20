@@ -14,7 +14,7 @@ java:
   artifacts:
     reports:
       junit:
-        - project/target/surefire-reports/Test-server.ClentHandlerTest.xml
+        - project/target/surefire-reports/TEST-server.ClentHandlerTest.xml
       
       
 pages:
