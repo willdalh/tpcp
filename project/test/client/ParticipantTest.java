@@ -46,7 +46,7 @@ public class ParticipantTest {
     @Test
     void test() throws IOException{
         participant.startConnection(mockSocket);
-        scannerInputStream.transferTo(scannerOutputStream);
+        //scannerInputStream.transferTo(scannerOutputStream);
         PrintWriter printWriter = new PrintWriter(scannerOutputStream);
         printWriter.write("!showlog");
         assertEquals(1234336567, mockSocket.getPort());
