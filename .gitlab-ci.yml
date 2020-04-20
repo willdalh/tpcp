@@ -9,7 +9,6 @@ java:
   stage: test
   script:
     - cd project
-    - mvn install
     - mvn test
   artifacts:
     reports:
