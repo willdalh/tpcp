@@ -2,6 +2,7 @@ image: maven:alpine
 
 stages:
   - test
+  - generate-javadoc
   - deploy
 
 test:
@@ -9,14 +10,29 @@ test:
   script: 
     - cd project
     - mvn test
+    
+generate-javadoc:
+  stage: generate-javadoc
+  script:
+    - cd project
+    - mvn javadoc:javadoc
+    - ls .
+    - ls target
+  artifacts:
+    paths:
+      - project/target/
 
-      
       
 pages:
   stage: deploy
   script:
   - mkdir .public
-  - cp -r project/javadoc/* .public
+  - ls
+  - ls project
+  - ls project/target
+  - ls project/target/site
+  - ls project/target/site/apidocs
+  - cp -r project/target/site/apidocs/* .public
   - mv .public public
   artifacts:
     paths:

@@ -30,6 +30,7 @@ public class Participant {
      * Constructor with custom address and port
      * @param address IP-address of server
      * @param port port
+     * @param is inputstream to be scanned
      */
     public Participant(String address, int port, InputStream is){
         this.address = address;
