@@ -20,7 +20,7 @@ generate-javadoc:
     - ls target
   artifacts:
     paths:
-      - target/
+      - project/target/
 
       
 pages:
