@@ -91,9 +91,9 @@ I tillegg til de grunnleggende meldingene som sendes mellom koordinator og delta
 
 En deltager sender først `REQUESTING NEW TRANSACTION--query` til koordinatoren. Fase 1 begynner med at koordinatoren opplyser alle deltakere om at det er satt igang en ny transaksjon. Deltagerne får da meldingen `NEW TRANSACTION--query--READY TO COMMIT?`. Tilbake til koordinator sendes da meldingen `YES`. I fase 2 mottar deltagerne `TRANSACTION--query--COMMIT`. Deltageren sender tilbake `COMMITTED`, når instruksjonen er utført. Hvis deltageren hadde svart `NO` i fase en, ville den første meldingen i fase 2 blitt `TRANSACTION--query--ROLLBACK`, og deltagerne ville svart med `ROLLBACKED`.
 
-I forklaringen ovenfor får man et overblikk over hvordan reglene i vår implementasjon av protokollen er. Hver melding er en tekststreng, og må i noen tilfeller deles opp for å komme fram til komponentene den består av. Teamet løste dette ved å skille hver komponent med to bindestreker. Å bruke to bindestreker var løsningen på at vi trengte et vilkårlig sett med tegn som brukeren sjeldent ville ønske å skrive i en oppføring. Komponentene, med unntak av selve oppføringen, har alltid store bokstaver. Grunnen til dette er for å gjøre protokollens meldingsflyt med oversiktlig, og skille oppføringen fra de andre kodeordene.
+I forklaringen ovenfor får man et overblikk over hvordan reglene i teamets implementasjon av protokollen er. Hver melding er en tekststreng, og må i noen tilfeller deles opp for å komme fram til komponentene den består av. Teamet løste dette ved å skille hver komponent med to bindestreker. Å bruke to bindestreker var løsningen på at vi trengte et vilkårlig sett med tegn som brukeren sjeldent ville ønske å skrive i en oppføring. Komponentene, med unntak av selve oppføringen, har alltid store bokstaver. Grunnen til dette er for å gjøre protokollens meldingsflyt mer oversiktlig, og å skille oppføringen fra de andre kodeordene.
 
-Meldingene som kommer fra koordinator under en transaksjon er alltid på formen `STATUS--query--INSTRUCTIONS`. Hvis status er `NEW TRANSACTION`, vet deltagerne at det settes igang en ny transaksjon. Den siste komponenten inneholder instruksjonene som skal følges. `READY TO COMMIT?` sørger for at brukeren blir spurt om den sier seg enig i oppføringen. Figur 1 illustrerte meldingsflyten i en vellykket transaksjon, men det er også to andre tilfeller som kan oppstå. Figuren under illustrerer meldingsflyten når en annen deltager svarer `NO` i fase en.
+Meldingene som kommer fra koordinator under en transaksjon er alltid på formen `STATUS--query--INSTRUCTIONS`. Hvis status er `NEW TRANSACTION`, vet deltakerne at det settes igang en ny transaksjon. Den siste komponenten inneholder instruksjonene som skal følges. `READY TO COMMIT?` sørger for at brukeren blir spurt om den er med på oppføringen. Figur 1 illustrerte meldingsflyten i en vellykket transaksjon, men det er også to andre tilfeller som kan oppstå. Figuren under illustrerer meldingsflyten når en annen deltager svarer `NO` i fase en.
 
 <figure class=”image”>
 <img src="documentation/figures/tpcpNoAnswer.png" alt="Figur som viser flyten når en annen deltager svarer NO" height="550">
@@ -114,28 +114,28 @@ TCP er en nettverksprotokoll som befinner seg på transportlaget i den forenkled
 ### Utdrag fra WireShark
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\OppkoblingDekodet.png" alt="Wireshark eksempel" height="550">
+<img src="documentation\WiresharkNettverk\Dekodet\Oppkobling.png" alt="Wireshark eksempel">
 <figcaption>Figur 4: Oppkobling mellom server og klient i wireshark</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\HelTransaksjonDekode.png" alt="Wireshark eksempel" height="550">
-<figcaption>Figur 4:Wireshark eksempel på en suksessfull transaksjon</figcaption>
+<img src="documentation\WiresharkNettverk\Dekodet\Suksess.png" alt="Wireshark eksempel">
+<figcaption>Figur 4: Wireshark eksempel på en suksessfull transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\TCP-streamdataHelTransaksjon.png" alt="Wireshark eksempel" height="550">
-<figcaption>Figur 4:TCP-streamdata output fra denne transaksjon</figcaption>
+<img src="documentation\WiresharkNettverk\Dekodet\TCP-stream.png" alt="Wireshark eksempel">
+<figcaption>Figur 4: TCP-streamdata output fra denne transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\HelRollbackDecoded.png" alt="Wireshark eksempel" height="550">
-<figcaption>Figur 4:Wireshark eksempel på rollback i en transaksjon</figcaption>
+<img src="documentation\WiresharkNettverk\Dekodet\Transaksjonrollback.png" alt="Wireshark eksempel">
+<figcaption>Figur 4: Wireshark eksempel på rollback i en transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\ShutdownWithDecode.png" alt="Wireshark eksempel" height="550">
-<figcaption>Figur 4:Wireshark eksempel på shutdown i en transaksjon</figcaption>
+<img src="documentation\WiresharkNettverk\Dekodet\Shutdown.png" alt="Wireshark eksempel">
+<figcaption>Figur 4: Wireshark eksempel på shutdown i en transaksjon</figcaption>
 </figure>
 
 ### Implementert funksjonalitet
