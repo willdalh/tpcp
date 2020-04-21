@@ -5,6 +5,8 @@ import java.net.Socket;
 
 /**
  * Client with main method
+ *
+ * @author afk, magnubau, williad
  */
 public class Client {
     public static void main(String[] args) {

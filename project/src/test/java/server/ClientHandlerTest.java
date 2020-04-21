@@ -9,7 +9,7 @@ import java.net.Socket;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class ClentHandlerTest {
+class ClientHandlerTest {
 
     Socket mockSocket;
     BufferedReader mockReader;

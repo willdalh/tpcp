@@ -6,14 +6,15 @@ import java.util.Date;
 
 /**
  * This class contains methods that handles two-phase-commit
- * trasnsactions between participants
+ * transactions between participants
  *
+ * @author afk, magnubau, williad
  */
 public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
-    private int timeout = 5;
+    private int timeout = 15;
     private ArrayList<ClientHandler> respondList = new ArrayList<>(); //A list containing the clients who have responded
 
 
@@ -28,7 +29,7 @@ public class Coordinator {
 
 
     /**
-     * This method checks if all participants areready to commit a new transaction
+     * This method checks if all participants are ready to commit a new transaction
      *
      * @param query     The description of the transaction
      * @return          true if all participants are ready to commit. else false
@@ -92,7 +93,7 @@ public class Coordinator {
 
     /**
      * This method instructs all participants to commit, and checks if they
-     * are all successfull
+     * are all successful
      * @return      true if all participants commit successfully. else false
      */
     private boolean commitTransaction(){

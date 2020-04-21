@@ -17,7 +17,8 @@ public class ClientHandler{
      * Takes in a socket connection and a client id as argument
      * @param connection of type socket
      * @param id client id
-     * @author afk
+     *
+     * @author afk, magnubau, williad
      */
     public ClientHandler(Socket connection, int id){
         this.connection = connection;
