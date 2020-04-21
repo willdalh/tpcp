@@ -14,14 +14,13 @@ import java.util.concurrent.*;
  * @author afk, magnubau, williad
  */
 public class Server {
+    final static int PORTNR = 3000;
     /**
      * This main method goes in loops waiting for new connections to
      * @param args default arguments
      */
     public static void main(String[] args) {
-        final int PORTNR = 3000;
         int id = 0;
-
         System.out.println("Server is running. Waiting for clients...");
         try {
             ServerSocket server = new ServerSocket(PORTNR);

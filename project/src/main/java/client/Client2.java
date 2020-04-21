@@ -3,6 +3,11 @@ package client;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Copy of Client.java
+ *
+ * @author afk, magnubau, williad
+ */
 public class Client2 {
     public static void main(String[] args) {
         Participant participant = new Participant(System.in);

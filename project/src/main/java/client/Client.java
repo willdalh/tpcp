@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * Client with main method
+ * Client with main method starting the participant
  *
  * @author afk, magnubau, williad
  */
