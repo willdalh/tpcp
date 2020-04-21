@@ -16,6 +16,8 @@ generate-javadoc:
   script:
     - cd project
     - mvn javadoc:javadoc
+    - ls .
+    - ls target
       
 pages:
   stage: deploy
