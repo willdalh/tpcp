@@ -14,61 +14,62 @@ import java.util.concurrent.*;
  * @author afk, magnubau, williad
  */
 public class Server {
-
-
     /**
-     *This main method goes in loops waiting for new connections to
-     * handle
-     *
-     * @throws IOException
+     * This main method goes in loops waiting for new connections to
+     * @param args default arguments
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         final int PORTNR = 3000;
         int id = 0;
 
         System.out.println("Server is running. Waiting for clients...");
-        ServerSocket server = new ServerSocket(PORTNR);
-        ArrayList<ClientHandler> participants = new ArrayList<>();
-        boolean wait = true;
-        while(wait){
+        try {
+            ServerSocket server = new ServerSocket(PORTNR);
+            ArrayList<ClientHandler> participants = new ArrayList<>();
+            boolean wait = true;
+            while (wait) {
 
-            ExecutorService executor = Executors.newCachedThreadPool();
-            Callable<Object> waiter = new Callable<Object>() {
-                public Object call() throws IOException {
-                    return server.accept();
-                }
-            };
-            Future<Object> promise = executor.submit(waiter);
-            try {
-                Object res = promise.get(10, TimeUnit.SECONDS);
-                participants.add(new ClientHandler((Socket)res, id));
-                participants.get(participants.size() - 1).sendToParticipant("You are connected with id " + id);
-                System.out.println("Client connected with id: " + id + "\nNumber of clients: " + participants.size() + "\n");
+                ExecutorService executor = Executors.newCachedThreadPool();
+                Callable<Object> waiter = new Callable<Object>() {
+                    public Object call() throws IOException {
+                        return server.accept();
+                    }
+                };
+                Future<Object> promise = executor.submit(waiter);
+                try {
+                    Object res = promise.get(10, TimeUnit.SECONDS);
+                    participants.add(new ClientHandler((Socket) res, id));
+                    participants.get(participants.size() - 1).sendToParticipant("You are connected with id " + id);
+                    System.out.println("Client connected with id: " + id + "\nNumber of clients: " + participants.size() + "\n");
 
-                /* ---------------- FOR DEBUG ------------- */
+                    /* ---------------- FOR DEBUG ------------- */
                     if (participants.size() == 2) wait = false;
-                /* ---------------------------------------- */
+                    /* ---------------------------------------- */
 
-            } catch (TimeoutException toe) {
+                } catch (TimeoutException toe) {
 
-                System.out.println("Stopped waiting for clients");
-                wait = false;
-            } catch (InterruptedException | ExecutionException ie) {
-                ie.printStackTrace();
-                wait = false;
-            } finally {
-                promise.cancel(true);
+                    System.out.println("Stopped waiting for clients");
+                    wait = false;
+                } catch (InterruptedException | ExecutionException ie) {
+                    ie.printStackTrace();
+                    wait = false;
+                } finally {
+                    promise.cancel(true);
+                }
+                id++;
             }
-            id++;
+            for (ClientHandler i : participants) {
+                System.out.println(i + " is connected,");
+            }
+            Coordinator coordinator = new Coordinator(participants);
+            coordinator.start();
+            for (ClientHandler party : participants) {
+                party.shutdown();
+            }
+            server.close();
         }
-        for(ClientHandler i: participants){
-            System.out.println(i + " is connected,");
+        catch(IOException ioe){
+            ioe.printStackTrace();
         }
-        Coordinator coordinator = new Coordinator(participants);
-        coordinator.start();
-        for(ClientHandler party: participants){
-            party.shutdown();
-        }
-        server.close();
     }
 }

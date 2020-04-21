@@ -40,6 +40,7 @@ public class Participant {
 
     /**
      * Constructor that sets the default address and port
+     * @param is inputstream to be scanned
      */
     public Participant(InputStream is){
         this.address = ADDRESS;
@@ -49,6 +50,7 @@ public class Participant {
 
     /**
      * Method for starting connection with the server
+     * @param socket connection with the server
      */
     public void startConnection(Socket socket){
         System.out.println("CLIENT: Attempting to connect to server");
@@ -69,11 +71,11 @@ public class Participant {
 
             connected = true;
             while (connected) {
+                /* Check if user has written something */
                 scannerInput = this.readFromScanner();
 
-
+                /* Check for message from coordinator */
                 response = this.readFromCoordinator();
-
                 /* Check if coordinator is initiating transaction */
                 if (this.coordinatorInitiatingTransaction(response)) {
                     System.out.println("CLIENT: Coordinator has initiated a transaction");
@@ -106,6 +108,7 @@ public class Participant {
                 }
 
                 if (scannerInput.length() > 0){
+                    System.out.println("CLIENT: You wrote '" + scannerInput + "'");
                     /* Participant wishes to see the log */
                     if (scannerInput.equals("!showlog")){
                         System.out.println("CLIENT:\n" + this.getLog());
@@ -180,10 +183,12 @@ public class Participant {
     private String waitForAnswer(){
         String participantResponse = "";
         String prematureInstructions = "";
+        System.out.print("Your answer: ");
         while (!(participantResponse.toUpperCase()).matches("YES|NO")) {
 
             if (participantResponse.length() > 0){
                 System.out.println("CLIENT: Please write either YES or NO");
+                System.out.print("Your answer: ");
             }
             participantResponse = (this.readFromScanner()).toUpperCase();
             prematureInstructions = this.readFromCoordinator();
@@ -219,11 +224,13 @@ public class Participant {
     private String executeInstructionsAndReport(String instructions){
         boolean reportBack = true;
         if (instructions.equals("COMMIT")){
+            /* Update to redo-log */
             this.confirmRedoLog();
             this.sendToCoordinator("COMMITTED");
             System.out.println("CLIENT: Committed");
         }
         else if (instructions.equals("ROLLBACK")){
+            /* Revert back to undo-log */
             this.confirmUndoLog();
             this.sendToCoordinator("ROLLBACKED");
             System.out.println("CLIENT: Rollbacked");

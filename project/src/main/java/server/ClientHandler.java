@@ -5,6 +5,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * Class that handles the communication with one participant
+ *
+ * @author afk, magnubau, williad
+ */
 public class ClientHandler{
     private Socket connection = null;
     private int id;
@@ -41,8 +46,9 @@ public class ClientHandler{
 
     /**
      * Receves a message from cordinator and sends it to the participant
-     * @param message is the instruction to the participant
-     * This methode uses the printwriter function to write the instruction to the participant
+     * This method uses the PrintWriter function println
+     * @param message the message to be sent to the participant
+     * @return true if message is sent, false otherwise
      */
     public boolean sendToParticipant(String message) {
         try {
@@ -56,9 +62,9 @@ public class ClientHandler{
 
 
     /**
-     * reads the response from the participant and return it to the coordinator
-     * @return returne the response
-     * Uses the methode Buffereader to read the response from the participant. Then the response is returned to the coordinator
+     * Reads the response from the participant and returns it to the coordinator
+     * Uses the method readLine from BufferedReader to read the response
+     * @return the response
      */
     public String readFromParticipant(){
         String line = "";
