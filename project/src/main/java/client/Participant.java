@@ -7,7 +7,7 @@ import java.util.Scanner;
 /**
  * Class representing a participant in Two-Phase Commit Transaction
  *
- * @author williad
+ * @author afk, magnubau, williad
  */
 public class Participant {
     final String ADDRESS = "localhost";
@@ -359,10 +359,18 @@ public class Participant {
         return stringBuilder.toString();
     }
 
+    /**
+     * Get-method for the address
+     * @return address
+     */
     public String getAddress(){
         return this.address;
     }
 
+    /**
+     * Get-method for the port
+     * @return port
+     */
     public int getPort(){
         return this.port;
     }

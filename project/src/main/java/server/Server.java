@@ -12,7 +12,8 @@ import server.*;
  * This class handles connection requests from clients and creates
  * a new instance of ClientHandler for each new client, and adds it
  * a shared list
- * @author magnubau
+ *
+ * @author afk, magnubau, williad
  */
 public class Server {
 

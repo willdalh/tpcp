@@ -6,8 +6,9 @@ import java.util.Date;
 
 /**
  * This class contains methods that handles two-phase-commit
- * trasnsactions between participants
+ * transactions between participants
  *
+ * @author afk, magnubau, williad
  */
 public class Coordinator {
 
@@ -28,7 +29,7 @@ public class Coordinator {
 
 
     /**
-     * This method checks if all participants areready to commit a new transaction
+     * This method checks if all participants are ready to commit a new transaction
      *
      * @param query     The description of the transaction
      * @return          true if all participants are ready to commit. else false
@@ -92,7 +93,7 @@ public class Coordinator {
 
     /**
      * This method instructs all participants to commit, and checks if they
-     * are all successfull
+     * are all successful
      * @return      true if all participants commit successfully. else false
      */
     private boolean commitTransaction(){
