@@ -42,7 +42,7 @@ public class Server {
                     System.out.println("Client connected with id: " + id + "\nNumber of clients: " + participants.size() + "\n");
 
                     /* ---------------- FOR DEBUG ------------- */
-                    if (participants.size() == 2) wait = false;
+                    //if (participants.size() == 2) wait = false;
                     /* ---------------------------------------- */
 
                 } catch (TimeoutException toe) {
