@@ -15,7 +15,7 @@ public class Coordinator {
 
     private ArrayList<ClientHandler> participants = new ArrayList<>();
     private String tractionStatement;
-    private int timeout = 5;
+    private int timeout = 15;
     private ArrayList<ClientHandler> respondList = new ArrayList<>(); //A list containing the clients who have responded
 
 
