@@ -114,27 +114,27 @@ TCP er en nettverksprotokoll som befinner seg på transportlaget i den forenkled
 ### Utdrag fra WireShark
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\Oppkobling.png" alt="Wireshark eksempel">
+<img src="documentation\WiresharkNettverk\Dekodet\Oppkobling.PNG" alt="Wireshark eksempel">
 <figcaption>Figur 4: Oppkobling mellom server og klient i wireshark</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\Suksess.png" alt="Wireshark eksempel">
+<img src="documentation\WiresharkNettverk\Dekodet\Suksess.PNG" alt="Wireshark eksempel">
 <figcaption>Figur 4: Wireshark eksempel på en suksessfull transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\TCP-stream.png" alt="Wireshark eksempel">
+<img src="documentation\WiresharkNettverk\Dekodet\TCP-stream.PNG" alt="Wireshark eksempel">
 <figcaption>Figur 4: TCP-streamdata output fra denne transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\Transaksjonrollback.png" alt="Wireshark eksempel">
+<img src="documentation\WiresharkNettverk\Dekodet\Transaksjonrollback.PNG" alt="Wireshark eksempel">
 <figcaption>Figur 4: Wireshark eksempel på rollback i en transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\Dekodet\Shutdown.png" alt="Wireshark eksempel">
+<img src="documentation\WiresharkNettverk\Dekodet\Shutdown.PNG" alt="Wireshark eksempel">
 <figcaption>Figur 4: Wireshark eksempel på shutdown i en transaksjon</figcaption>
 </figure>
 
