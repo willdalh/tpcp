@@ -3,7 +3,6 @@ package client;
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
-import utils.*;
 
 /**
  * Class representing a participant in Two-Phase Commit Transaction
