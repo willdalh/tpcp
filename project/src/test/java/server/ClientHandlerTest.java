@@ -37,7 +37,7 @@ class ClientHandlerTest {
     @Test
     void sendToParticipant(){
         boolean messageSent = clientHandler.sendToParticipant("hei");
-        assertTrue(messageSent = true, "Message was not sent");
+        assertTrue(messageSent, "Message was not sent");
     }
 
     @Test
