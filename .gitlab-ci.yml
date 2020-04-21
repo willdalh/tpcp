@@ -18,6 +18,10 @@ generate-javadoc:
     - mvn javadoc:javadoc
     - ls .
     - ls target
+  artifacts:
+    paths:
+      - target/
+
       
 pages:
   stage: deploy
