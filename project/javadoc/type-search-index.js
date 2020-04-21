@@ -1,1 +1,0 @@
-typeSearchIndex = [{"p":"client","l":"Client"},{"p":"client","l":"Client2"},{"p":"server","l":"ClientHandler"},{"p":"server","l":"Coordinator"},{"p":"<Unnamed>","l":"HeiVerden"},{"p":"client","l":"Participant"},{"p":"server","l":"Server"},{"p":"utils","l":"Utils"}]
