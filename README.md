@@ -16,36 +16,34 @@
 
 Under er en liste over begreper som brukes i denne rapporten.
 
-**Atomisk operasjon**
+**Atomisk operasjon**:
 En operasjon som endrer på en tilstand uten noe mellomstadie.
 
-**Transaksjon**
+**Transaksjon**:
 Ramme for en handling som sikrer atomisk utførelse.
 
-**Koordinator (Coordinator)**
+**Koordinator (Coordinator)**:
 Node som distribuerer meldinger til andre noder og leder utførelsen av en transaksjon.
 
-**Deltaker (Participant)**
+**Deltaker (Participant)**:
 Node som deltar i transaksjoner.
 
-**Query**
+**Query**:
 Strengen som skal føres opp i deltakernes logg.
 
-**WireShark**
+**WireShark**:
 Program som fanger pakker som går gjennom nettverksadapteren på maskinen.
 
-**Socket**
+**Socket**:
 Et endepunkt for en toveis-kommunikasjon over et ip-basert nettverk.(Nettverkssocket, Wikipedia, 2020)
 
-**Kontinuerlig integrasjon (Continous integration, CI)**
+**Kontinuerlig integrasjon (Continous integration, CI)**:
 Å sjekke inn kode jevnlig til et repository med tester som verifiserer koden.
 
-**Versjonskontroll**
+**Versjonskontroll**:
 Et system som holder orden på endringer og versjoner av filer.
 
 ## <a name="innledning"></a> Innledning
-
-Dette avsnittet kan også være rett under tittelen
 
 Vi har programmert en løsning som implementerer Two-Phase Commit Protocol (TPCP). Protokollen brukes i et nettverk av noder hvor alle skal utføre en handling hvis, og bare hvis alle andre gjør det. Nettverket består av en koordinator og en til flere deltakere. Løsningen er programmert i Java
 
@@ -116,27 +114,27 @@ TCP er en nettverksprotokoll som befinner seg på transportlaget i den forenkled
 ### Utdrag fra WireShark
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\DekodetOppkobling”Dekodet" alt="Wireshark eksempel" height="550">
+<img src="documentation\WiresharkNettverk\Dekodet\OppkoblingDekodet.png" alt="Wireshark eksempel" height="550">
 <figcaption>Figur 4: Oppkobling mellom server og klient i wireshark</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\HelTransaksjonDekodet”Dekodet" alt="Wireshark eksempel" height="550">
+<img src="documentation\WiresharkNettverk\Dekodet\HelTransaksjonDekode.png" alt="Wireshark eksempel" height="550">
 <figcaption>Figur 4:Wireshark eksempel på en suksessfull transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\TCP-streamdataHelTransaksjon”Dekodet" alt="Wireshark eksempel" height="550">
+<img src="documentation\WiresharkNettverk\Dekodet\TCP-streamdataHelTransaksjon.png" alt="Wireshark eksempel" height="550">
 <figcaption>Figur 4:TCP-streamdata output fra denne transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\HelRollbackDecoded”Dekodet" alt="Wireshark eksempel" height="550">
+<img src="documentation\WiresharkNettverk\Dekodet\HelRollbackDecoded.png" alt="Wireshark eksempel" height="550">
 <figcaption>Figur 4:Wireshark eksempel på rollback i en transaksjon</figcaption>
 </figure>
 
 <figure class=”image”>
-<img src="documentation\WiresharkNettverk\ShutdownWithDecode”Dekodet" alt="Wireshark eksempel" height="550">
+<img src="documentation\WiresharkNettverk\Dekodet\ShutdownWithDecode.png" alt="Wireshark eksempel" height="550">
 <figcaption>Figur 4:Wireshark eksempel på shutdown i en transaksjon</figcaption>
 </figure>
 
