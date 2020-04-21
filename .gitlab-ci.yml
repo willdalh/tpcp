@@ -21,6 +21,11 @@ pages:
   stage: deploy
   script:
   - mkdir .public
+  - ls
+  - ls project
+  - ls project/target
+  - ls project/target/site
+  - ls project/target/site/apidocs
   - cp -r project/target/site/apidocs/* .public
   - mv .public public
   artifacts:
