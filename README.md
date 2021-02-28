@@ -1,3 +1,5 @@
+This project was done in connection to the course TDAT2004 - Datakommunikasjon med nettverksprogrammering. This README acts as the final report for the project. 
+
 # Two-Phase Commit Protocol (TPCP)
 
 ## Innholdsfortegnelse
